@@ -5,9 +5,9 @@ import { LiaUserCircleSolid } from "react-icons/lia";
 import { useContext } from "react";
 import { SliderContext } from "../context/sliderContext";
 import { Link } from "react-router-dom";
+import { CiMenuKebab } from "react-icons/ci";
 
-
-export const Header = () => {
+export const Header = ({openModal}) => {
     const { setIsSliderOpen } = useContext(SliderContext);
 
     return (
@@ -45,6 +45,9 @@ export const Header = () => {
 
                 {/* Right Section */}
                 <div className="flex items-center gap-4 mx-6">
+                    <button onClick={openModal}>
+                        <CiMenuKebab size={"20px"} />
+                    </button>
                     <button className="flex justify-center items-center w-27 border border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2">
                         <span className="text-blue-600"><LiaUserCircleSolid size={"25px"} /></span>
                         <Link to="/signin">
