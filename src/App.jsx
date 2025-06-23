@@ -1,23 +1,13 @@
 import './App.css'
+import {Header} from './components/Header'
+import { Slider } from './components/Slider'
 
 function App() {
 
   return (
     <>
-      <h1 className='text-center font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
-      <h1 className='font-bold text-red-600'>Helo</h1>  
+      <Header />
+      {/* <Slider /> */}
     </>
   )
 }
