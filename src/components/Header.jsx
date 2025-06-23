@@ -11,9 +11,9 @@ export const Header = () => {
 
     return (
         <>
-            <header className={`flex items-center justify-between p-2 bg-white duration-200`}>
+            <header className="flex items-center justify-between p-2 duration-200">
                 {/* Left Section */}
-                <div className="flex items-center gap-6 mx-6">
+                <div className="flex items-center gap-2 mx-6">
                     <button onClick={() => setIsSliderOpen(prev => !prev)}>
                         <AiOutlineMenu className="cursor-pointer text-gray-700 text-xl w-13" />
                     </button>
