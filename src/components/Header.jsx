@@ -4,6 +4,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { LiaUserCircleSolid } from "react-icons/lia";
 import { useContext } from "react";
 import { SliderContext } from "../context/sliderContext";
+import { Link } from "react-router-dom";
 
 
 export const Header = () => {
@@ -13,7 +14,7 @@ export const Header = () => {
         <>
             <header className="flex items-center justify-between p-2 duration-200">
                 {/* Left Section */}
-                <div className="flex items-center gap-2 mx-6">
+                <div className="flex items-center gap-2 mx-3">
                     <button onClick={() => setIsSliderOpen(prev => !prev)}>
                         <AiOutlineMenu className="cursor-pointer text-gray-700 text-xl w-13" />
                     </button>
@@ -46,7 +47,9 @@ export const Header = () => {
                 <div className="flex items-center gap-4 mx-6">
                     <button className="flex justify-center items-center w-27 border border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2">
                         <span className="text-blue-600"><LiaUserCircleSolid size={"25px"} /></span>
-                        <h1 className="text-blue-600 font-semibold">Sign in</h1>
+                        <Link to="/signin">
+                            <h1 className="text-blue-600 font-semibold">Sign in</h1>
+                        </Link>
                     </button>
                 </div>
             </header>

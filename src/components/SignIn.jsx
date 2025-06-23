@@ -1,7 +1,10 @@
+
 export const SignIn = () => {
-    return(
+    return (
         <>
-            <h1>Signin component</h1>
+            <div>
+                <h1>Signin component</h1>
+            </div>
         </>
     )
 }
