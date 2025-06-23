@@ -2,17 +2,21 @@ import { CiSearch } from "react-icons/ci";
 import { FaMicrophone } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
 import { LiaUserCircleSolid } from "react-icons/lia";
-// import { useState } from "react";
+import { useContext } from "react";
+import { SliderContext } from "../context/sliderContext";
+
 
 export const Header = () => {
-    // const [isSliderOpen, setIsSliderOpen] = useState(true);
+    const { setIsSliderOpen } = useContext(SliderContext);
 
     return (
         <>
-            <header className="flex items-center justify-between p-2 bg-white shadow-md">
+            <header className={`flex items-center justify-between p-2 bg-white duration-200`}>
                 {/* Left Section */}
                 <div className="flex items-center gap-6 mx-6">
-                    <AiOutlineMenu className="cursor-pointer text-gray-700 text-xl w-13"/>
+                    <button onClick={() => setIsSliderOpen(prev => !prev)}>
+                        <AiOutlineMenu className="cursor-pointer text-gray-700 text-xl w-13" />
+                    </button>
                     <img
                         src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"
                         alt="YouTube"
@@ -39,9 +43,9 @@ export const Header = () => {
                 </div>
 
                 {/* Right Section */}
-                <div className="flex items-center gap-4 mx-6">                   
+                <div className="flex items-center gap-4 mx-6">
                     <button className="flex justify-center items-center w-27 border border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2">
-                        <span className="text-blue-600"><LiaUserCircleSolid size={"25px"}/></span>
+                        <span className="text-blue-600"><LiaUserCircleSolid size={"25px"} /></span>
                         <h1 className="text-blue-600 font-semibold">Sign in</h1>
                     </button>
                 </div>
