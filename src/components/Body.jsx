@@ -23,7 +23,7 @@ export const Body = () => {
                 }
             </div>
 
-            <div className="border-2 border-blue-700 flex justify-end">
+            <div className="border-2 border-blue-700 flex justify-end p-2">
                 <Videos />
             </div>
         </>
