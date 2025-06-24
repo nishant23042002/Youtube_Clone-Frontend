@@ -6,7 +6,7 @@ import { useState } from 'react'
 
 
 function App() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleModal = () => setIsOpen((prev) => !prev)
   return (
@@ -15,7 +15,7 @@ function App() {
       <Slider />
 
 
-      <main className="p-4 border">
+      <main className="py-4 border-yellow-500 border-2 h-auto overflow-y-auto">
         <Outlet />
       </main>
     </div>

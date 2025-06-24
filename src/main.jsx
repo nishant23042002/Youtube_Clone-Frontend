@@ -6,6 +6,8 @@ import { SliderProvider } from './context/sliderContext.jsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Body } from './components/Body.jsx';
 import { SignIn } from './components/SignIn.jsx';
+import { Videos } from './components/Videos.jsx';
+import { VideoDetails } from './components/VideoDetails.jsx';
 
 
 const router = createBrowserRouter([
@@ -15,6 +17,8 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Body /> },
       { path: "signin", element: <SignIn /> },
+      { path: "videos", element: <Videos /> },
+      { path: "video/:id", element: <VideoDetails /> },
     ]
   }
 ])
