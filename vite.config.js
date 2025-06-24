@@ -7,11 +7,4 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  theme: {
-    extend: {
-      fontFamily: {
-        roboto: ['Roboto', 'Arial', 'sans-serif'],
-      },
-    },
-  },
 })
