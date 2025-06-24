@@ -11,11 +11,9 @@ export const VideoDetails = () => {
 
     return (
         <>
-            <div className="flex border-2 border-green-900">
-
-
+            <div className="flex gap-8">
                 {/* Left section */}
-                <div className="w-288 p-1 rounded-2xl shadow-xl border-pink-500 border-2 mx-20">
+                <div className="p-1 rounded-2xl shadow-xl mx-6 w-300 max-md:w-full">
                     {/* Video and title */}
                     <div className="flex flex-col rounded-2xl">
                         <img className="rounded-2xl" src="https://marketplace.canva.com/EAEqfS4X0Xw/1/0/1600w/canva-most-attractive-youtube-thumbnail-wK95f3XNRaM.jpg" alt="thumbnail" />
@@ -24,22 +22,22 @@ export const VideoDetails = () => {
 
 
                     {/* video-info section */}
-                    <div className="flex justify-between items-center gap-3 mb-6">
-                        <div className="flex justify-center items-center">
-                            <div className="mr-4">
-                                <img className="w-15 rounded-full" src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg" alt="profile-picture" />
+                    <div className="flex justify-between items-center gap-3 mb-2">
+                        <div className="flex justify-center items-center max-md:hidden">
+                            <div className="mr-4 w-15 max-lg:w-10">
+                                <img className="rounded-full" src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg" alt="profile-picture" />
                             </div>
                             <div className="mr-5">
-                                <h3 className="flex items-center gap-2 font-semibold">Shark Tank India <span><IoCheckmarkDoneCircleSharp color="gray" /></span></h3>
+                                <h3 className="flex items-center gap-2 font-semibold w-42 border">Shark Tank India <span><IoCheckmarkDoneCircleSharp color="gray" /></span></h3>
                                 <span className="text-gray-500 text-sm font-semibold">3M subscribers</span>
                             </div>
                             <div>
-                                <button className="px-3 rounded-3xl text-white bg-black font-semibold border h-10 cursor-pointer">Subscribe</button>
+                                <button className="px-3 rounded-3xl text-white bg-black font-semibold h-10 cursor-pointer">Subscribe</button>
                             </div>
                         </div>
 
                         {/* like-dislike section */}
-                        <div className="flex gap-3">
+                        <div className="flex gap-3 max-md:hidden">
                             <div className="bg-gray-200 flex justify-center items-center rounded-3xl">
                                 <div className="flex items-center hover:bg-gray-300 rounded-l-3xl justify-center gap-3 p-3 cursor-pointer duration-300 border-r-1 border-gray-300"><SlLike size={"20px"} />6.2k</div>
                                 <div className="hover:bg-gray-300 rounded-r-3xl p-3.5 cursor-pointer duration-300"><SlDislike size={"20px"} /></div>
@@ -54,12 +52,61 @@ export const VideoDetails = () => {
 
                     </div>
 
-                    {/* comments section */}
-                    <div className="border border-amber-500">
+
+                    {/* 👇 Compact version for small screens only */}
+                    <div className="flex md:hidden justify-between items-center gap-2 mb-4 px-2">
+                        {/* Profile + Subscribe */}
+                        <div className="flex items-center gap-2">
+                            <img
+                                className="w-8 h-8 rounded-full"
+                                src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg"
+                                alt="profile-picture"
+                            />
+                            <div className="flex flex-col">
+                                <h3 className="text-sm font-semibold flex items-center gap-1">
+                                    Shark Tank <IoCheckmarkDoneCircleSharp className="text-gray-500" size={14} />
+                                </h3>
+                                <span className="text-xs text-gray-500">3M subs</span>
+                            </div>
+                        </div>
+
+                        {/* Subscribe Button */}
+                        <button className="text-xs px-3 py-1 rounded-2xl text-white bg-black font-semibold">
+                            Subscribe
+                        </button>
+                    </div>
+
+
+                    <div className="flex md:hidden justify-between items-center gap-2 px-2 mb-4">
+                        {/* Like/Dislike */}
+                        <div className="flex bg-gray-200 rounded-3xl overflow-hidden">
+                            <button className="px-2 py-1 text-sm flex items-center gap-1 hover:bg-gray-300">
+                                <SlLike size={14} /> 6.2k
+                            </button>
+                            <button className="px-2 py-1 hover:bg-gray-300">
+                                <SlDislike size={14} />
+                            </button>
+                        </div>
+
+                        {/* Share */}
+                        <button className="flex items-center gap-1 text-sm bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded-2xl">
+                            <PiShareFat size={14} /> Share
+                        </button>
+
+                        {/* More */}
+                        <button className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded-full">
+                            <HiOutlineDotsHorizontal size={16} />
+                        </button>
+                    </div>
+
+
+
+                    {/* Add comments */}
+                    <div>
                         <h1 className="font-bold text-xl mb-4">622 Comments</h1>
                         <div className="flex gap-4">
-                            <div>
-                                <img className="w-15 rounded-full" src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg" alt="profile-picture" />
+                            <div className="w-15">
+                                <img className="rounded-full" src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg" alt="profile-picture" />
                             </div>
                             <div className="w-full mr-4">
                                 <div className="" onClick={() => setComment(true)}>
@@ -78,29 +125,48 @@ export const VideoDetails = () => {
                                 }
                             </div>
                         </div>
-                        <div className="my-3">
-                            <div className="h-auto flex gap-4">
-                                <div className="py-2">
-                                    <img className="w-12 rounded-full" src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg" alt="profile-picture" />
+
+                        {/* comment section */}
+                        <div className="flex gap-4 my-4">
+                            <div className="flex flex-col sm:flex-row gap-4 my-4 px-2">
+                                {/* Avatar */}
+                                <div className="w-12 h-12 flex-shrink-0">
+                                    <img
+                                        className="w-full h-full rounded-full object-cover"
+                                        src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg"
+                                        alt="profile-picture"
+                                    />
                                 </div>
-                                <div className="flex flex-col">
-                                    <h1 className="text-gray-700 font-semibold">@Username</h1>
-                                    <p className="text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa perferendis, sapiente iusto eaque Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempora, mollitia. inventore quod atque animi eveniet eos. Nobis.</p>
-                                    <div className="flex my-2">
-                                        <div className="flex gap-2 cursor-pointer px-2 hover:bg-gray-300 duration-300 p-2 rounded-3xl"><span><SlLike size={"20px"} /></span>0</div>
-                                        <div className="flex justify-center items-center cursor-pointer hover:bg-gray-300 duration-300 p-2 rounded-3xl"><span><SlDislike size={"20px"} /></span></div>
+
+                                {/* Comment content */}
+                                <div className="flex flex-col w-full">
+                                    <h1 className="text-gray-700 font-semibold text-sm">@Username</h1>
+                                    <p className="text-gray-700 text-sm">
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa perferendis,
+                                        sapiente iusto eaque Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                                        Tempora, mollitia. Inventore quod atque animi eveniet eos. Nobis.
+                                    </p>
+
+                                    {/* Like/Dislike */}
+                                    <div className="flex gap-2 my-2">
+                                        <button className="flex gap-1 items-center text-sm px-3 py-1 hover:bg-gray-300 rounded-3xl duration-200">
+                                            <SlLike size={16} /> 0
+                                        </button>
+                                        <button className="p-2 hover:bg-gray-300 rounded-3xl duration-200">
+                                            <SlDislike size={16} />
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
+                        </div>
+
+                    </div>
                 </div>
-                {/* Right section */}
-                <div>
-                    <h1>Helllfsfakfzafaffafa</h1>
-                </div>
+
             </div>
+
+
         </>
     )
 }
