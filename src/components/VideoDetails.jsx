@@ -22,13 +22,13 @@ export const VideoDetails = () => {
 
 
                     {/* video-info section */}
-                    <div className="flex justify-between items-center gap-3 mb-2">
+                    <div className="flex justify-between items-center gap-3 mb-18">
                         <div className="flex justify-center items-center max-md:hidden">
                             <div className="mr-4 w-15 max-lg:w-10">
                                 <img className="rounded-full" src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg" alt="profile-picture" />
                             </div>
                             <div className="mr-5">
-                                <h3 className="flex items-center gap-2 font-semibold w-42 border">Shark Tank India <span><IoCheckmarkDoneCircleSharp color="gray" /></span></h3>
+                                <h3 className="flex items-center gap-2 font-semibold w-42">Shark Tank India <span><IoCheckmarkDoneCircleSharp color="gray" /></span></h3>
                                 <span className="text-gray-500 text-sm font-semibold">3M subscribers</span>
                             </div>
                             <div>

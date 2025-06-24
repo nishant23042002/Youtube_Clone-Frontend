@@ -15,7 +15,7 @@ function App() {
       <Slider />
 
 
-      <main className="py-4 border-yellow-500 border-2 h-auto overflow-y-auto">
+      <main className="py-4 h-auto overflow-y-auto">
         <Outlet />
       </main>
     </div>
