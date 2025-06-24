@@ -27,7 +27,7 @@ export const Slider = () => {
     return (
         <>
             <div className={`overflow-auto scroll-smooth bg-white border border-amber-300 h-screen fixed top-0 left-0 w-64 py-[18px] z-50 shadow-lg transition-transform duration-200 ease-in-out  ${isSliderOpen ? "translate-x-0 " : "-translate-x-full"}`}>
-                <div className="flex items-center gap-2 mx-5">
+                <div className="flex items-center mx-1">
                     <button onClick={() => setIsSliderOpen(prev => !prev)}>
                         <AiOutlineMenu className="cursor-pointer text-gray-700 text-xl w-13" />
                     </button>

@@ -100,15 +100,15 @@ export const Header = ({ openModal, isOpen }) => {
       <div>
         {
           isOpen && (
-            <div className="fixed top-15 shadow-xl/30 border-gray-300 p-4 rounded-xl bg-white right-34 flex items-center z-50 w-60 h-80 border">
-              <ul className="flex flex-col gap-4">
-                <li className="flex items-center gap-3"><span><TbUserPentagon /></span>Your data in Youtube</li>
-                <li className="flex items-center gap-3"><span><GoMoon /></span>Appearance: </li>
-                <li className="flex items-center gap-3"><span><HiLanguage /></span>Language</li>
-                <li className="flex items-center gap-3"><span><CiLocationOn /></span>Location</li>
-                <li className="flex items-center gap-3"><span><IoSettingsOutline /></span>Settings</li>
-                <li className="flex items-center gap-3"><span><CiFlag1 /></span>Help</li>
-                <li className="flex items-center gap-3"><span><VscReport /></span>Send feedback</li>
+            <div className="fixed top-15 shadow-xl/30 border-gray-300 py-2 rounded-2xl bg-white right-34 flex items-center z-50 w-65 h-85 border">
+              <ul className="flex flex-col text-gray-700 w-full">
+                <li className="w-full flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-t-xl"><span className="ml-4 text-xl text-gray-800"><TbUserPentagon /></span>Your data in Youtube</li>
+                <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><GoMoon /></span>Appearance: </li>
+                <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><HiLanguage /></span>Language</li>
+                <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><CiLocationOn /></span>Location</li>
+                <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><IoSettingsOutline /></span>Settings</li>
+                <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><CiFlag1 /></span>Help</li>
+                <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-b-xl"><span className="ml-4 text-xl text-gray-800"><VscReport /></span>Send feedback</li>
               </ul>
             </div>
           )
