@@ -11,12 +11,12 @@ function App() {
   const toggleModal = () => setIsOpen((prev) => !prev)
   return (
     <div>
-      <Header openModal={toggleModal} />
+      <Header openModal={toggleModal} isOpen={isOpen} />
       <Slider />
 
 
       <main className="p-4 border">
-        <Outlet context={{ isOpen }} />
+        <Outlet />
       </main>
     </div>
   )
