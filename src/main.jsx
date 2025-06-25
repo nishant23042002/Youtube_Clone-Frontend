@@ -9,7 +9,6 @@ import { SignIn } from './components/SignIn.jsx';
 import { Videos } from './components/Videos.jsx';
 import { VideoDetails } from './components/VideoDetails.jsx';
 
-
 const router = createBrowserRouter([
   {
     path: "/",

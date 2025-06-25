@@ -9,57 +9,52 @@ export const SignIn = () => {
     const [message, setMessage] = useState("");
 
 
+
+
     async function handleSubmit(e) {
         e.preventDefault();
         setMessage(""); // Reset message
-
-        const url = isRegistering
-            ? "http://localhost:4001/api/v1/user/register"
-            : "http://localhost:4001/api/v1/user/login";
 
         try {
             let response;
 
             if (isRegistering) {
-                // Validate client-side fields
-                if (!name || !email || !password || !profilePic) {
-                    setMessage("All fields are required.");
-                    return;
-                }
-
                 const formData = new FormData();
                 formData.append("userName", name);
                 formData.append("email", email);
                 formData.append("password", password);
                 formData.append("profilePicture", profilePic);
 
-                response = await fetch(url, {
+                response = await fetch("http://localhost:4001/api/v1/user/register", {
                     method: "POST",
                     body: formData,
                 });
             } else {
-                // Login sends JSON
-                if (!email || !password) {
-                    setMessage("Email and password are required.");
-                    return;
-                }
-
-                response = await fetch(url, {
+                response = await fetch("http://localhost:4001/api/v1/user/login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({ email, password }),
                 });
+                // Login sends JSON
+                if (!email || !password) {
+                    setMessage("Invalid email or password!!");
+                    return;
+                }
             }
-
             const data = await response.json();
-
+            console.log(data);
             if (!response.ok) {
                 throw new Error(data.message || "Something went wrong");
             }
 
-            setMessage("✅ Success! You're logged in or registered.");
+            localStorage.setItem("user", data.loggedInUser.name);
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("profilePic", data.loggedInUser.profilePic_URL);
+
+            setMessage(data.message);
+            setIsRegistering(false);
             // Optional: Save token, redirect, etc.
         } catch (err) {
             setMessage(`❌ ${err.message}`);

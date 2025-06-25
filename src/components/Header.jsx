@@ -8,20 +8,34 @@ import { SliderContext } from "../context/sliderContext";
 import { IoSettingsOutline } from "react-icons/io5";
 import { VscReport } from "react-icons/vsc";
 import { CiFlag1 } from "react-icons/ci";
-import { CiLocationOn } from "react-icons/ci";
 import { HiLanguage } from "react-icons/hi2";
 import { GoMoon } from "react-icons/go";
 import { TbUserPentagon } from "react-icons/tb";
+import { PiSignOutFill } from "react-icons/pi";
+
+
 
 export const Header = ({ openModal, isOpen }) => {
   const { setIsSliderOpen } = useContext(SliderContext);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
+  let token = localStorage.getItem("token");
+  let user = localStorage.getItem("user")
+  let profile = localStorage.getItem("profilePic")
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    window.location.href = "/";
+  }
+
+
   return (
     <>
       <header className="w-full flex items-center justify-between p-2 relative bg-white z-50">
         {/* Left Section */}
-        <div className="flex items-center gap-2 mx-3">
+        <div className="flex items-center gap-2 ml-3">
           <button onClick={() => setIsSliderOpen(prev => !prev)}>
             <AiOutlineMenu className="cursor-pointer text-gray-700 text-xl" />
           </button>
@@ -65,28 +79,44 @@ export const Header = ({ openModal, isOpen }) => {
         </div>
 
         {/* Right Section */}
-        <div className="max-sm:mx-2 flex items-center gap-4 mx-6">
-          <button className="cursor-pointer" onClick={openModal}>
+        <div className="max-sm:mx-0 flex items-center gap-4 mx-6">
+          <button className="cursor-pointer max-[510px]:hidden" onClick={openModal}>
             <CiMenuKebab size={"20px"} />
           </button>
-          <Link to="/signin">
-            <button className="flex justify-center items-center border w-24 border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2">
-              <span className="text-blue-600 text-xl">
-                <LiaUserCircleSolid />
-              </span>
-              <h1 className="max-sm:text-sm text-blue-600 font-semibold">Sign in</h1>
-            </button>
-          </Link>
+          <div className="flex gap-2">
+            {
+              !token ? (
+                <Link to="/signin">
+                  <button className="flex justify-center items-center border w-24 border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2">
+                    <span className="text-blue-600 text-xl">
+                      <LiaUserCircleSolid />
+                    </span>
+                    <h1 className="max-sm:text-sm text-blue-600 font-semibold">{token ? user : "Sign in"}</h1>
+                  </button>
+                </Link>
+              ) : (
+                <div className="flex justify-center items-center">
+                  <div className="h-10 w-10 border border-gray-300 rounded-full">
+                    <img className="rounded-3xl" src={profile} alt="profile" />
+                  </div>
+                  <div className="max-[460px]:hidden">
+                    <h1 className="flex flex-col">welcome, <span>{user}</span></h1>
+                  </div>
+                </div>
+              )
+            }
+
+          </div>
         </div>
 
         {/* Mobile Search Input (Overlay-style) */}
         {showMobileSearch && (
-          <div className="absolute left-23 px-4 bg-white sm:hidden flex items-center">
+          <div className="absolute left-16 px-2  sm:hidden flex items-center">
             <input
               autoFocus
               type="text"
               placeholder="Search"
-              className="flex-1 px-4 py-1.5 border border-gray-300 rounded-l-full outline-none"
+              className="flex-1 px-2 py-1.5 border border-gray-300 rounded-l-full outline-none"
             />
             <button
               className="px-4 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-full cursor-pointer"
@@ -105,7 +135,7 @@ export const Header = ({ openModal, isOpen }) => {
                 <li className="w-full flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-t-xl"><span className="ml-4 text-xl text-gray-800"><TbUserPentagon /></span>Your data in Youtube</li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><GoMoon /></span>Appearance: </li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><HiLanguage /></span>Language</li>
-                <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><CiLocationOn /></span>Location</li>
+                <li onClick={logout} className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><PiSignOutFill /></span>Sign Out</li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><IoSettingsOutline /></span>Settings</li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><CiFlag1 /></span>Help</li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-b-xl"><span className="ml-4 text-xl text-gray-800"><VscReport /></span>Send feedback</li>
