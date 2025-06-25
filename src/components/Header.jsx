@@ -69,14 +69,14 @@ export const Header = ({ openModal, isOpen }) => {
           <button className="cursor-pointer" onClick={openModal}>
             <CiMenuKebab size={"20px"} />
           </button>
-          <button className="flex justify-center items-center border w-24 border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2">
-            <span className="text-blue-600 text-xl">
-              <LiaUserCircleSolid />
-            </span>
-            <Link to="/signin">
+          <Link to="/signin">
+            <button className="flex justify-center items-center border w-24 border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2">
+              <span className="text-blue-600 text-xl">
+                <LiaUserCircleSolid />
+              </span>
               <h1 className="max-sm:text-sm text-blue-600 font-semibold">Sign in</h1>
-            </Link>
-          </button>
+            </button>
+          </Link>
         </div>
 
         {/* Mobile Search Input (Overlay-style) */}

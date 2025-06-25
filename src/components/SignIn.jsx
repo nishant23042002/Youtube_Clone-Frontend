@@ -1,5 +1,38 @@
+import { useState } from "react";
 
 export const SignIn = () => {
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [profilePic, setProfilePic] = useState(null);
+    const [isRegistering, setIsRegistering] = useState(true);
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        const formData = new FormData();
+
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        if (profilePic) {
+            formData.append("profilePicture", profilePic);
+        }
+
+        if (!profilePic) {
+            console.log("Invalid File / File not supported");
+        }
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+        }
+    }
+
+
+
+
+
+
+
+
     return (
         <div className="flex justify-center items-center my-14">
             <div className="shadow-xl flex max-[680px]:flex-col justify-evenly items-center p-4 rounded-4xl bg-white">
@@ -9,32 +42,59 @@ export const SignIn = () => {
                         src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"
                         alt="YouTube"
                     />
-                    <h1 className="text-3xl w-60 font-semibold">Create a Youtube Account</h1>
+                    <h1 className="text-3xl w-60 font-semibold">{isRegistering ? "Create a Youtube Account" : "Login in your Youtube Account"}</h1>
                     <p className="text-gray-700 font-semibold">Enter Your Name</p>
                 </div>
                 <div>
+
+                    {/* error message div */}
+                    <div className="flex justify-center items-center">
+                        <h1 className="text-red-600 font-semibold">Error message or success message</h1>
+                    </div>
                     <form
                         action="/"
                         method="POST"
                         encType="multipart/form-data"
                         className="bg-white p-6 rounded-lg space-y-4 w-full max-w-md"
                         noValidate
+                        onSubmit={handleSubmit}
                     >
-                        <fieldset className="border-2 border-blue-500 rounded-md px-2 group">
-                            <legend className="text-sm text-blue-500 px-1">Name</legend>
-                            <input
-                                type="text"
-                                name="name"
-                                id="name"
-                                placeholder="Your full name"
-                                required
-                                minLength={2}
-                                maxLength={50}
-                                autoComplete="name"
-                                className="outline-none p-2 w-full border-none rounded-md bg-white"
-                            />
+                        {
+                            isRegistering ? (
+                                <>
+                                    <fieldset className="border-2 border-blue-500 rounded-md px-2 group">
+                                        <legend className="text-sm text-blue-500 px-1">Name</legend>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            id="name"
+                                            placeholder="Your full name"
+                                            required
+                                            minLength={3}
+                                            maxLength={24}
+                                            autoComplete="name"
+                                            className="outline-none p-2 w-full border-none rounded-md bg-white"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                        />
 
-                        </fieldset>
+                                    </fieldset>
+
+                                    <fieldset className="border-2 border-blue-500 rounded-md px-2 group">
+                                        <legend className="text-sm text-blue-500 px-1">Profile Picture</legend>
+                                        <input
+                                            type="file"
+                                            name="profilePicture"
+                                            id="profilePicture"
+                                            accept="image/*"
+                                            required
+                                            className="w-full p-2 rounded-md bg-white text-gray-400 file:border-none file:mr-2 file:cursor-pointer outline-none"
+                                            onChange={(e) => setProfilePic(e.target.files[0])}
+                                        />
+                                    </fieldset>
+                                </>
+                            ) : ""
+                        }
 
                         <fieldset className="border-2 border-blue-500 rounded-md px-2 group">
                             <legend className="text-sm text-blue-500 px-1">Email</legend>
@@ -46,6 +106,8 @@ export const SignIn = () => {
                                 required
                                 autoComplete="email"
                                 className="outline-none p-2 w-full rounded-md bg-white"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </fieldset>
 
@@ -58,28 +120,24 @@ export const SignIn = () => {
                                 placeholder="Create a password"
                                 required
                                 minLength={8}
+                                maxLength={14}
                                 className="outline-none p-2 w-full rounded-md bg-white"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </fieldset>
 
-                        <fieldset className="border-2 border-blue-500 rounded-md px-2 group">
-                            <legend className="text-sm text-blue-500 px-1">Profile Picture</legend>
-                            <input
-                                type="file"
-                                name="profilePicture"
-                                id="profilePicture"
-                                accept="image/*"
-                                required
-                                className="w-full p-2 rounded-md bg-white text-gray-400 file:border-none file:mr-2 file:cursor-pointer outline-none"
-                            />
-                        </fieldset>
 
                         <button
                             type="submit"
                             className="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-semibold py-2 mt-4 px-4 rounded-md cursor-pointer"
                         >
-                            Register
+                            {isRegistering ? "Register" : "Log In"}
                         </button>
+                        <div className="flex gap-2 justify-center items-center">
+                            <p>{isRegistering ? "Already have an account?" : "Don't have an account?"}</p>
+                            <span className="underline text-blue-500 cursor-pointer" onClick={() => setIsRegistering(!isRegistering)}>{isRegistering ? "Login" : "Register"}</span>
+                        </div>
                     </form>
                 </div>
             </div>
