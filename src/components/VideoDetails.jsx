@@ -4,6 +4,7 @@ import { PiShareFat } from "react-icons/pi";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { useState } from "react";
+import { RelatedVideos } from "./RelatedVideos";
 
 
 export const VideoDetails = () => {
@@ -11,9 +12,9 @@ export const VideoDetails = () => {
 
     return (
         <>
-            <div className="flex gap-8">
+            <div className="flex max-xl:flex-col mt-8">
                 {/* Left section */}
-                <div className="p-1 rounded-2xl shadow-xl mx-6 w-300 max-md:w-full">
+                <div className="rounded-2xl mx-6 max-xl:w-auto w-300">
                     {/* Video and title */}
                     <div className="flex flex-col rounded-2xl">
                         <img className="rounded-2xl" src="https://marketplace.canva.com/EAEqfS4X0Xw/1/0/1600w/canva-most-attractive-youtube-thumbnail-wK95f3XNRaM.jpg" alt="thumbnail" />
@@ -22,7 +23,7 @@ export const VideoDetails = () => {
 
 
                     {/* video-info section */}
-                    <div className="flex justify-between items-center gap-3 mb-18">
+                    <div className="flex justify-between items-center gap-3 mb-2">
                         <div className="flex justify-center items-center max-md:hidden">
                             <div className="mr-4 w-15 max-lg:w-10">
                                 <img className="rounded-full" src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg" alt="profile-picture" />
@@ -158,15 +159,12 @@ export const VideoDetails = () => {
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
 
+                <RelatedVideos />
             </div>
-
-
         </>
     )
 }

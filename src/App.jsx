@@ -14,10 +14,7 @@ function App() {
       <Header openModal={toggleModal} isOpen={isOpen} />
       <Slider />
 
-
-      <main className="py-4 h-auto overflow-y-auto">
-        <Outlet />
-      </main>
+      <Outlet />
     </div>
   )
 }
