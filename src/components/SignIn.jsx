@@ -6,25 +6,66 @@ export const SignIn = () => {
     const [password, setPassword] = useState("")
     const [profilePic, setProfilePic] = useState(null);
     const [isRegistering, setIsRegistering] = useState(true);
+    const [message, setMessage] = useState("");
 
-    function handleSubmit(e) {
+
+    async function handleSubmit(e) {
         e.preventDefault();
-        const formData = new FormData();
+        setMessage(""); // Reset message
 
-        formData.append("name", name);
-        formData.append("email", email);
-        formData.append("password", password);
-        if (profilePic) {
-            formData.append("profilePicture", profilePic);
-        }
+        const url = isRegistering
+            ? "http://localhost:4001/api/v1/user/register"
+            : "http://localhost:4001/api/v1/user/login";
 
-        if (!profilePic) {
-            console.log("Invalid File / File not supported");
-        }
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
+        try {
+            let response;
+
+            if (isRegistering) {
+                // Validate client-side fields
+                if (!name || !email || !password || !profilePic) {
+                    setMessage("All fields are required.");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("userName", name);
+                formData.append("email", email);
+                formData.append("password", password);
+                formData.append("profilePicture", profilePic);
+
+                response = await fetch(url, {
+                    method: "POST",
+                    body: formData,
+                });
+            } else {
+                // Login sends JSON
+                if (!email || !password) {
+                    setMessage("Email and password are required.");
+                    return;
+                }
+
+                response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+            }
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Something went wrong");
+            }
+
+            setMessage("✅ Success! You're logged in or registered.");
+            // Optional: Save token, redirect, etc.
+        } catch (err) {
+            setMessage(`❌ ${err.message}`);
         }
     }
+
 
 
 
@@ -49,7 +90,7 @@ export const SignIn = () => {
 
                     {/* error message div */}
                     <div className="flex justify-center items-center">
-                        <h1 className="text-red-600 font-semibold">Error message or success message</h1>
+                        <h1 className="text-red-600 font-semibold">{message}</h1>
                     </div>
                     <form
                         action="/"
@@ -120,7 +161,6 @@ export const SignIn = () => {
                                 placeholder="Create a password"
                                 required
                                 minLength={8}
-                                maxLength={14}
                                 className="outline-none p-2 w-full rounded-md bg-white"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
