@@ -10,6 +10,7 @@ import { Videos } from './components/Videos.jsx';
 import { VideoDetails } from './components/VideoDetails.jsx';
 import { ProtectedRoute } from "./components/ProtectRoute.jsx"
 import { HandleError } from "./components/HandleError.jsx"
+import { ChannelInfo } from './components/ChannelInfo.jsx';
 
 
 const router = createBrowserRouter([
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
             <VideoDetails />
           </ProtectedRoute>)
       },
+      { path: "channelinfo", element: <ChannelInfo /> },
     ]
   }
 ])

@@ -33,7 +33,7 @@ export const Header = ({ openModal, isOpen }) => {
 
   return (
     <>
-      <header className="w-full flex items-center justify-between p-2 relative bg-white z-50">
+      <header className="w-full flex items-center justify-between relative bg-white z-50">
         {/* Left Section */}
         <div className="flex items-center gap-2 ml-3">
           <button onClick={() => setIsSliderOpen(prev => !prev)}>
@@ -55,12 +55,12 @@ export const Header = ({ openModal, isOpen }) => {
             <input
               type="text"
               placeholder="Search"
-              className="w-[40%] px-4 font-semibold p-[7px] outline-none border border-gray-300 rounded-tl-3xl rounded-bl-3xl"
+              className="w-[40%] px-4 font-semibold p-1 outline-none border border-gray-300 rounded-tl-3xl rounded-bl-3xl"
             />
-            <button className="px-4 py-1.5 bg-gray-100 border border-l-0 border-gray-300 rounded-r-full hover:bg-gray-300 duration-200 cursor-pointer">
-              <CiSearch size={"26px"} color="gray" />
+            <button className="px-2 py-1.5 bg-gray-100 border border-l-0 border-gray-300 rounded-r-full hover:bg-gray-300 duration-200 cursor-pointer">
+              <CiSearch size={"20px"} color="gray" />
             </button>
-            <button className="ml-2 p-3 bg-gray-200 border border-gray-300 hover:bg-gray-300 duration-200 rounded-full cursor-pointer">
+            <button className="ml-2 p-2 bg-gray-200 border border-gray-300 hover:bg-gray-300 duration-200 rounded-full cursor-pointer">
               <FaMicrophone size={"15px"} />
             </button>
           </div>
@@ -70,9 +70,9 @@ export const Header = ({ openModal, isOpen }) => {
             {!showMobileSearch && (
               <button
                 onClick={() => setShowMobileSearch((prev) => !prev)}
-                className="p-2 rounded-full bg-gray-100 cursor-pointer"
+                className="p-2 rounded-full bg-gray-200 cursor-pointer"
               >
-                <CiSearch size={22} />
+                <CiSearch size={14} />
               </button>
             )}
           </div>
@@ -97,13 +97,19 @@ export const Header = ({ openModal, isOpen }) => {
                   </Link>
                 </>
               ) : (
-                <div className="flex justify-center items-center">
-                  <button className="h-10 w-10 max-[400px]:w-9 border border-gray-300 rounded-full" onClick={openModal}>
-                    <img className="rounded-3xl" src={profile} alt="profile" />
+                <div className="flex items-center gap-2">
+                  <button
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gray-300 overflow-hidden flex items-center justify-center mr-2 cursor-pointer"
+                    onClick={openModal}
+                  >
+                    <img
+                      className="h-full object-cover rounded-full"
+                      src={profile}
+                      alt="profile"
+                    />
                   </button>
-                  <div className="max-[460px]:hidden">
-                    <h1 className="flex flex-col">welcome,</h1>
-                    <span>{user}</span>
+                  <div className="hidden min-[460px]:block">
+                    <h1 className="text-sm sm:text-base font-bold md:w-30">{user}</h1>
                   </div>
                 </div>
               )
@@ -119,13 +125,13 @@ export const Header = ({ openModal, isOpen }) => {
               autoFocus
               type="text"
               placeholder="Search"
-              className="flex-1 px-2 py-1.5 border border-gray-300 rounded-l-full outline-none"
+              className="flex-1 px-2 py-[3px] border border-gray-300 rounded-l-full outline-none"
             />
             <button
-              className="px-4 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-full cursor-pointer"
+              className="px-2 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-full cursor-pointer"
               onClick={() => setShowMobileSearch((prev) => !prev)}
             >
-              <CiSearch size={20} />
+              <CiSearch size={14} />
             </button>
           </div>
         )}
@@ -133,15 +139,20 @@ export const Header = ({ openModal, isOpen }) => {
       <div>
         {
           isOpen && (
-            <div className="fixed top-15 shadow-xl/30 border-gray-300 py-2 rounded-2xl bg-white right-34 flex items-center z-50 w-65 h-85 border">
+            <div className="fixed top-15 shadow-xl/30 border-gray-300 py-2 rounded-2xl bg-white max-[500px]:right-5 right-34 flex items-center z-50 w-65 h-85">
               <ul className="flex flex-col text-gray-700 w-full">
-                <li className="w-full flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-t-xl"><span className="ml-4 text-xl text-gray-800"><TbUserPentagon /></span>Your data in Youtube</li>
+                {
+                  token && (
+                    <>
+                      <Link to={"/channelinfo"}>
+                        <li className="w-full flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-t-xl"><span className="ml-4 text-xl text-gray-800"><TbUserPentagon /></span>Create channel</li>
+                      </Link>
+                      <li onClick={logout} className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><PiSignOutFill /></span>Sign Out</li>
+                    </>
+                  )
+                }
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><GoMoon /></span>Appearance: </li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><HiLanguage /></span>Language</li>
-                {
-                  token &&
-                  <li onClick={logout} className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><PiSignOutFill /></span>Sign Out</li>
-                }
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><IoSettingsOutline /></span>Settings</li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><CiFlag1 /></span>Help</li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-b-xl"><span className="ml-4 text-xl text-gray-800"><VscReport /></span>Send feedback</li>
