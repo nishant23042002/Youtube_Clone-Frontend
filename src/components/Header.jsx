@@ -80,27 +80,30 @@ export const Header = ({ openModal, isOpen }) => {
 
         {/* Right Section */}
         <div className="max-sm:mx-0 flex items-center gap-4 mx-6">
-          <button className="cursor-pointer max-[510px]:hidden" onClick={openModal}>
-            <CiMenuKebab size={"20px"} />
-          </button>
           <div className="flex gap-2">
             {
               !token ? (
-                <Link to="/signin">
-                  <button className="flex justify-center items-center border w-24 border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2">
-                    <span className="text-blue-600 text-xl">
-                      <LiaUserCircleSolid />
-                    </span>
-                    <h1 className="max-sm:text-sm text-blue-600 font-semibold">{token ? user : "Sign in"}</h1>
+                <>
+                  <button className="cursor-pointer max-[510px]:hidden" onClick={openModal}>
+                    <CiMenuKebab size={"20px"} />
                   </button>
-                </Link>
+                  <Link to="/signin">
+                    <button className="flex justify-center items-center border w-24 border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2">
+                      <span className="text-blue-600 text-xl">
+                        <LiaUserCircleSolid />
+                      </span>
+                      <h1 className="max-sm:text-sm text-blue-600 font-semibold">{token ? user : "Sign in"}</h1>
+                    </button>
+                  </Link>
+                </>
               ) : (
                 <div className="flex justify-center items-center">
-                  <div className="h-10 w-10 border border-gray-300 rounded-full">
+                  <button className="h-10 w-10 max-[400px]:w-9 border border-gray-300 rounded-full" onClick={openModal}>
                     <img className="rounded-3xl" src={profile} alt="profile" />
-                  </div>
+                  </button>
                   <div className="max-[460px]:hidden">
-                    <h1 className="flex flex-col">welcome, <span>{user}</span></h1>
+                    <h1 className="flex flex-col">welcome,</h1>
+                    <span>{user}</span>
                   </div>
                 </div>
               )
@@ -135,7 +138,10 @@ export const Header = ({ openModal, isOpen }) => {
                 <li className="w-full flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-t-xl"><span className="ml-4 text-xl text-gray-800"><TbUserPentagon /></span>Your data in Youtube</li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><GoMoon /></span>Appearance: </li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><HiLanguage /></span>Language</li>
-                <li onClick={logout} className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><PiSignOutFill /></span>Sign Out</li>
+                {
+                  token &&
+                  <li onClick={logout} className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><PiSignOutFill /></span>Sign Out</li>
+                }
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><IoSettingsOutline /></span>Settings</li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><CiFlag1 /></span>Help</li>
                 <li className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-b-xl"><span className="ml-4 text-xl text-gray-800"><VscReport /></span>Send feedback</li>

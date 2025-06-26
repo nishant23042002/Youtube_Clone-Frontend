@@ -2,15 +2,11 @@
 export const Body = () => {
 
     return (
-        <>
-            <div className="">
-                <div className="flex justify-center items-center">
-                    <div className="w-full flex border border-gray-300 justify-center flex-col items-center p-4 rounded-xl shadow-xl">
-                        <h1 className="text-center text-2xl font-bold mb-4">Try searching to get started</h1>
-                        <p className="text-center text-gray-600">Start watching videos to help us build a feed of videos you'll love.</p>
-                    </div>
-                </div>
+        <div className="flex justify-center items-center my-20">
+            <div className="w-full flex justify-center flex-col items-center p-4 rounded-xl">
+                <h1 className="text-center text-2xl font-bold mb-4">Login to watch videos</h1>
+                <p className="text-center text-gray-600">Please sign in to access video content tailored for you.</p>
             </div>
-        </>
+        </div>
     )
 }
