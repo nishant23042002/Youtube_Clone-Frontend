@@ -1,0 +1,12 @@
+// components/ProtectedRoute.jsx
+import { Navigate } from "react-router-dom";
+
+export const ProtectedRoute = ({ children }) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        //Redirect to login if token not found
+        return <Navigate to="/signin" replace />;
+    }
+    return children;
+};

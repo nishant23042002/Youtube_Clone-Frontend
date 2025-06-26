@@ -1,5 +1,5 @@
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
+
 
 export const SignIn = () => {
     const [name, setName] = useState("")
@@ -8,7 +8,6 @@ export const SignIn = () => {
     const [profilePic, setProfilePic] = useState(null);
     const [isRegistering, setIsRegistering] = useState(true);
     const [message, setMessage] = useState("");
-    // const navigate = useNavigate();
 
 
 
@@ -31,6 +30,7 @@ export const SignIn = () => {
                     method: "POST",
                     body: formData,
                 });
+
             } else {
                 response = await fetch("http://localhost:4001/api/v1/user/login", {
                     method: "POST",
