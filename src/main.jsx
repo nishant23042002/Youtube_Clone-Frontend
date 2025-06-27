@@ -11,6 +11,8 @@ import { VideoDetails } from './components/VideoDetails.jsx';
 import { ProtectedRoute } from "./components/ProtectRoute.jsx"
 import { HandleError } from "./components/HandleError.jsx"
 import { ChannelInfo } from './components/ChannelInfo.jsx';
+import { Provider } from "react-redux";
+import { store } from "./services/store.js";
 
 
 const router = createBrowserRouter([
@@ -40,8 +42,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <SliderProvider>
-      <RouterProvider router={router}></RouterProvider>
-    </SliderProvider>
+    <Provider store={store}>
+      <SliderProvider>
+        <RouterProvider router={router}></RouterProvider>
+      </SliderProvider>
+    </Provider>
   </StrictMode>,
 )

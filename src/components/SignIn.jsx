@@ -1,5 +1,7 @@
 import { useState } from "react";
-
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../services/authSlice.js"; // adjust path as needed
+import { useNavigate } from "react-router-dom";
 
 export const SignIn = () => {
     const [name, setName] = useState("")
@@ -8,7 +10,8 @@ export const SignIn = () => {
     const [profilePic, setProfilePic] = useState(null);
     const [isRegistering, setIsRegistering] = useState(true);
     const [message, setMessage] = useState("");
-
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
 
 
@@ -47,19 +50,35 @@ export const SignIn = () => {
             }
             const data = await response.json();
             console.log(data);
-            if(response.ok){
-                window.location.href = "/videos";
-            }
+
             if (!response.ok) {
                 throw new Error(data.message || "Something went wrong");
             }
 
-            localStorage.setItem("user", data.loggedInUser.name);
             localStorage.setItem("token", data.token);
-            localStorage.setItem("profilePic", data.loggedInUser.profilePic_URL);
+            localStorage.setItem(
+                "user",
+                JSON.stringify({
+                    name: data.loggedInUser.name,
+                    profilePic: data.loggedInUser.profilePic_URL,
+                    id: data.loggedInUser._id,
+                })
+            );
+
+            dispatch(
+                loginSuccess({
+                    user: {
+                        name: data.loggedInUser.name,
+                        profilePic: data.loggedInUser.profilePic_URL,
+                        id: data.loggedInUser._id,
+                    },
+                    token: data.token,
+                })
+            );
 
             setMessage(data.message);
             setIsRegistering(false);
+            navigate("/videos")
             // Optional: Save token, redirect, etc.
         } catch (err) {
             setMessage(`❌ ${err.message}`);

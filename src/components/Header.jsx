@@ -12,21 +12,23 @@ import { HiLanguage } from "react-icons/hi2";
 import { GoMoon } from "react-icons/go";
 import { TbUserPentagon } from "react-icons/tb";
 import { PiSignOutFill } from "react-icons/pi";
-
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../services/authSlice.js";
 
 
 export const Header = ({ openModal, isOpen }) => {
   const { setIsSliderOpen } = useContext(SliderContext);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
-
+  const dispatch = useDispatch();
+  
   let token = localStorage.getItem("token");
-  let user = localStorage.getItem("user")
-  let profile = localStorage.getItem("profilePic")
+  const user = useSelector((state) => state.auth.user);
+  const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
 
-  const logout = () => {
+  const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-
+    dispatch(logout());
     window.location.href = "/";
   }
 
@@ -82,7 +84,7 @@ export const Header = ({ openModal, isOpen }) => {
         <div className="max-sm:mx-0 flex items-center gap-4 mx-6">
           <div className="flex gap-2">
             {
-              !token ? (
+              !isLoggedIn ? (
                 <>
                   <button className="cursor-pointer max-[510px]:hidden" onClick={openModal}>
                     <CiMenuKebab size={"20px"} />
@@ -104,12 +106,12 @@ export const Header = ({ openModal, isOpen }) => {
                   >
                     <img
                       className="h-full object-cover rounded-full"
-                      src={profile}
+                      src={user.profilePic}
                       alt="profile"
                     />
                   </button>
                   <div className="hidden min-[460px]:block">
-                    <h1 className="text-sm sm:text-base font-bold md:w-30">{user}</h1>
+                    <h1 className="text-sm sm:text-base font-bold md:w-30">{user.name}</h1>
                   </div>
                 </div>
               )
@@ -147,7 +149,7 @@ export const Header = ({ openModal, isOpen }) => {
                       <Link to={"/channelinfo"}>
                         <li className="w-full flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-t-xl"><span className="ml-4 text-xl text-gray-800"><TbUserPentagon /></span>Create channel</li>
                       </Link>
-                      <li onClick={logout} className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><PiSignOutFill /></span>Sign Out</li>
+                      <li onClick={handleLogout} className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><PiSignOutFill /></span>Sign Out</li>
                     </>
                   )
                 }
