@@ -3,12 +3,31 @@ import { SlDislike } from "react-icons/sl";
 import { PiShareFat } from "react-icons/pi";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RelatedVideos } from "./RelatedVideos";
+import { useParams } from "react-router-dom";
 
 
 export const VideoDetails = () => {
+    const { id } = useParams(); // Get video ID from URL
+    const [videoInfo, setVideo] = useState(null);
     const [comment, setComment] = useState(false);
+
+    useEffect(() => {
+        const getVideo = async () => {
+            try {
+                let response = await fetch(`http://localhost:4001/api/v1/videos/${id}`)
+                const data = await response.json();
+                console.log(data);
+                setVideo(data.video);
+            } catch (err) {
+                console.error("Error fetching video:", err);
+            }
+        };
+        getVideo();
+    }, [id])
+
+
 
     return (
         <>
@@ -18,7 +37,7 @@ export const VideoDetails = () => {
                     {/* Video and title */}
                     <div className="flex flex-col rounded-2xl">
                         <img className="rounded-2xl" src="https://marketplace.canva.com/EAEqfS4X0Xw/1/0/1600w/canva-most-attractive-youtube-thumbnail-wK95f3XNRaM.jpg" alt="thumbnail" />
-                        <h1 className="font-bold my-2">Title of the video.</h1>
+                        <h1 className="font-bold my-2">{videoInfo?.title}</h1>
                     </div>
 
 
@@ -26,10 +45,10 @@ export const VideoDetails = () => {
                     <div className="flex justify-between items-center gap-3 mb-2">
                         <div className="flex justify-center items-center max-md:hidden">
                             <div className="mr-4 w-15 max-lg:w-10">
-                                <img className="rounded-full" src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg" alt="profile-picture" />
+                                <img className="rounded-full" src={videoInfo?.channelId?.profilePicture} alt="profile-picture" />
                             </div>
                             <div className="mr-5">
-                                <h3 className="flex items-center gap-2 font-semibold w-42">Shark Tank India <span><IoCheckmarkDoneCircleSharp color="gray" /></span></h3>
+                                <h3 className="flex items-center gap-2 font-semibold w-42">{videoInfo?.channelId?.name} <span><IoCheckmarkDoneCircleSharp color="gray" /></span></h3>
                                 <span className="text-gray-500 text-sm font-semibold">3M subscribers</span>
                             </div>
                             <div>
@@ -40,7 +59,7 @@ export const VideoDetails = () => {
                         {/* like-dislike section */}
                         <div className="flex gap-3 max-md:hidden">
                             <div className="bg-gray-200 flex justify-center items-center rounded-3xl">
-                                <div className="flex items-center hover:bg-gray-300 rounded-l-3xl justify-center gap-3 p-3 cursor-pointer duration-300 border-r-1 border-gray-300"><SlLike size={"20px"} />6.2k</div>
+                                <div className="flex items-center hover:bg-gray-300 rounded-l-3xl justify-center gap-3 p-3 cursor-pointer duration-300 border-r-1 border-gray-300"><SlLike size={"20px"} />{videoInfo?.likes}</div>
                                 <div className="hover:bg-gray-300 rounded-r-3xl p-3.5 cursor-pointer duration-300"><SlDislike size={"20px"} /></div>
                             </div>
                             <div className="bg-gray-200 hover:bg-gray-300 flex justify-center items-center cursor-pointer rounded-3xl p-2 duration-300">
@@ -60,12 +79,12 @@ export const VideoDetails = () => {
                         <div className="flex items-center gap-2">
                             <img
                                 className="w-8 h-8 rounded-full"
-                                src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg"
+                                src={videoInfo?.channelId?.profilePicture}
                                 alt="profile-picture"
                             />
                             <div className="flex flex-col">
                                 <h3 className="text-sm font-semibold flex items-center gap-1">
-                                    Shark Tank <IoCheckmarkDoneCircleSharp className="text-gray-500" size={14} />
+                                    {videoInfo?.channelId?.name} <IoCheckmarkDoneCircleSharp className="text-gray-500" size={14} />
                                 </h3>
                                 <span className="text-xs text-gray-500">3M subs</span>
                             </div>
@@ -82,7 +101,7 @@ export const VideoDetails = () => {
                         {/* Like/Dislike */}
                         <div className="flex bg-gray-200 rounded-3xl overflow-hidden">
                             <button className="px-2 py-1 text-sm flex items-center gap-1 hover:bg-gray-300">
-                                <SlLike size={14} /> 6.2k
+                                <SlLike size={14} /> {videoInfo?.likes}
                             </button>
                             <button className="px-2 py-1 hover:bg-gray-300">
                                 <SlDislike size={14} />

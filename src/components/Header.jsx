@@ -97,7 +97,7 @@ export const Header = ({ openModal, isOpen }) => {
                     <CiMenuKebab size={"20px"} />
                   </button>
                   <Link to="/signin">
-                    <button className="flex justify-center items-center border w-24 border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2">
+                    <button className="flex justify-center items-center border w-24 border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2 mt-2">
                       <span className="text-blue-600 text-xl">
                         <LiaUserCircleSolid />
                       </span>
@@ -106,9 +106,9 @@ export const Header = ({ openModal, isOpen }) => {
                   </Link>
                 </>
               ) : (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <button
-                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gray-300 overflow-hidden flex items-center justify-center mr-2 cursor-pointer"
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gray-300 overflow-hidden flex items-center justify-center mr-2 cursor-pointer mt-2"
                     onClick={openModal}
                   >
                     <img

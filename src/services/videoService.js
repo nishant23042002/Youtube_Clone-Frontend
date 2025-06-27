@@ -4,3 +4,5 @@ export const fetchAllVideos = async () => {
     const res = await api.get("/videos/");
     return res.data;
 };
+
+

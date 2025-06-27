@@ -8,6 +8,7 @@ import { formatDistanceToNow } from "date-fns";
 
 export const Videos = () => {
     const [videos, setVideos] = useState([]);
+ 
 
 
     useEffect(() => {
@@ -37,7 +38,7 @@ export const Videos = () => {
             {
                 videos.map((video) => {
                     return (
-                        <Link key={video._id} to={`${video._id}`}>
+                        <Link key={video._id} to={`/video/${video._id}`}>
                             <div className="max-sm:w-78 w-88 h-85 p-1 rounded-2xl shadow-xl border border-gray-200 cursor-pointer">
                                 <div className="">
                                     <img className="rounded-2xl" src={video.thumbnail} alt="thumbnail" />
