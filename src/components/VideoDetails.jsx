@@ -7,27 +7,56 @@ import { useEffect, useState } from "react";
 import { RelatedVideos } from "./RelatedVideos";
 import { useParams } from "react-router-dom";
 
-
 export const VideoDetails = () => {
     const { id } = useParams(); // Get video ID from URL
     const [videoInfo, setVideo] = useState(null);
-    const [comment, setComment] = useState(false);
+    const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
+    const [comments, setComments] = useState([]);
+    const [showCommentInput, setShowCommentInput] = useState(false);
+    const [newComment, setNewComment] = useState("");
 
+
+    const toggleLike = () => {
+        if (liked) {
+            setLiked(false);
+            setLikeCount(prev => prev - 1);
+        } else {
+            setLiked(true);
+            setLikeCount(prev => prev + 1);
+        }
+    };
+
+    const getVideo = async () => {
+        try {
+            let response = await fetch(`http://localhost:4001/api/v1/videos/${id}`)
+            const data = await response.json();
+            console.log(data);
+            setVideo(data.video);
+        } catch (err) {
+            console.error("Error fetching video:", err);
+        }
+    };
+    const getCommentsOfVideos = async () => {
+        try {
+            let response = await fetch(`http://localhost:4001/api/v1/comments/${id}`)
+            const data = await response.json()
+            setComments(data.allUserComments)
+            console.log(data);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
     useEffect(() => {
-        const getVideo = async () => {
-            try {
-                let response = await fetch(`http://localhost:4001/api/v1/videos/${id}`)
-                const data = await response.json();
-                console.log(data);
-                setVideo(data.video);
-            } catch (err) {
-                console.error("Error fetching video:", err);
-            }
-        };
         getVideo();
+        getCommentsOfVideos();
+
     }, [id])
 
-
+    const handleAddComment = async () => {
+        
+    }
 
     return (
         <>
@@ -59,7 +88,7 @@ export const VideoDetails = () => {
                         {/* like-dislike section */}
                         <div className="flex gap-3 max-md:hidden">
                             <div className="bg-gray-200 flex justify-center items-center rounded-3xl">
-                                <div className="flex items-center hover:bg-gray-300 rounded-l-3xl justify-center gap-3 p-3 cursor-pointer duration-300 border-r-1 border-gray-300"><SlLike size={"20px"} />{videoInfo?.likes}</div>
+                                <div onClick={toggleLike} className="flex items-center hover:bg-gray-300 rounded-l-3xl justify-center gap-3 p-3 cursor-pointer duration-300 border-r-1 border-gray-300"><SlLike size={"20px"} />{likeCount}</div>
                                 <div className="hover:bg-gray-300 rounded-r-3xl p-3.5 cursor-pointer duration-300"><SlDislike size={"20px"} /></div>
                             </div>
                             <div className="bg-gray-200 hover:bg-gray-300 flex justify-center items-center cursor-pointer rounded-3xl p-2 duration-300">
@@ -122,63 +151,43 @@ export const VideoDetails = () => {
 
 
                     {/* Add comments */}
-                    <div>
-                        <h1 className="font-bold text-xl mb-4">622 Comments</h1>
+                    <div className="mt-6">
+                        <h1 className="font-bold text-xl mb-4">{comments.length} Comments</h1>
                         <div className="flex gap-4">
-                            <div className="w-15">
-                                <img className="rounded-full" src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg" alt="profile-picture" />
-                            </div>
+                            <img className="w-12 h-12 rounded-full" src="" alt="profile" />
                             <div className="w-full mr-4">
-                                <div className="" onClick={() => setComment(true)}>
+                                <div onClick={() => setShowCommentInput(true)}>
                                     <h1 className="text-md font-semibold text-gray-600 border-b-2">Comment Section</h1>
                                 </div>
-                                {
-                                    comment && (
-                                        <div>
-                                            <input className="w-full p-3 mr-3 text-xl outline-none" placeholder="Write a comment" type="text" name="comments" id="comment" />
-                                            <div className="flex gap-4 justify-end mb-3">
-                                                <button className="p-2 px-4 rounded-3xl hover:bg-gray-200 duration-300 cursor-pointer" onClick={() => setComment(false)}>cancel</button>
-                                                <button className="p-2 px-4 rounded-3xl bg-gray-200 hover:bg-gray-300 duration-300 cursor-pointer">Add comment</button>
-                                            </div>
+                                {showCommentInput && (
+                                    <div>
+                                        <input
+                                        type="text"
+                                            className="w-full p-3 text-xl outline-none"
+                                            placeholder="Write a comment"
+                                            value={newComment}
+                                            onChange={(e) => setNewComment(e.target.value)}
+                                        />
+                                        <div className="flex justify-end gap-4 mt-2">
+                                            <button onClick={() => setShowCommentInput(false)} className="p-2 px-4 rounded-3xl hover:bg-gray-200">Cancel</button>
+                                            <button onClick={handleAddComment} className="p-2 px-4 bg-gray-200 hover:bg-gray-300 rounded-3xl">Add Comment</button>
                                         </div>
-                                    )
-                                }
-                            </div>
-                        </div>
-
-                        {/* comment section */}
-                        <div className="flex gap-4 my-4">
-                            <div className="flex flex-col sm:flex-row gap-4 my-4 px-2">
-                                {/* Avatar */}
-                                <div className="w-12 h-12 flex-shrink-0">
-                                    <img
-                                        className="w-full h-full rounded-full object-cover"
-                                        src="https://marketplace.canva.com/EAFuecoEOf4/6/0/1600w/canva-orange-and-black-illustrated-gaming-logo-youtube-profile-picture-bFxTLOfTXSs.jpg"
-                                        alt="profile-picture"
-                                    />
-                                </div>
-
-                                {/* Comment content */}
-                                <div className="flex flex-col w-full">
-                                    <h1 className="text-gray-700 font-semibold text-sm">@Username</h1>
-                                    <p className="text-gray-700 text-sm">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa perferendis,
-                                        sapiente iusto eaque Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                                        Tempora, mollitia. Inventore quod atque animi eveniet eos. Nobis.
-                                    </p>
-
-                                    {/* Like/Dislike */}
-                                    <div className="flex gap-2 my-2">
-                                        <button className="flex gap-1 items-center text-sm px-3 py-1 hover:bg-gray-300 rounded-3xl duration-200">
-                                            <SlLike size={16} /> 0
-                                        </button>
-                                        <button className="p-2 hover:bg-gray-300 rounded-3xl duration-200">
-                                            <SlDislike size={16} />
-                                        </button>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </div>
+
+
+
+                        {comments.map((comment) => (
+                            <div key={comment._id} className="flex gap-4 mt-6">
+                                <img className="w-12 h-12 rounded-full" src={comment?.userId?.profilePicture} alt="avatar" />
+                                <div className="flex flex-col">
+                                    <h1 className="text-sm font-semibold text-gray-700">@{comment?.userId?.userName}</h1>
+                                    <p className="text-sm text-gray-700">{comment?.text}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
 

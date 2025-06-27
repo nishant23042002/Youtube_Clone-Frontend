@@ -32,6 +32,7 @@ export const Header = ({ openModal, isOpen }) => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.clear()
     dispatch(logout());
     window.location.href = "/";
   }
