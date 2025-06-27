@@ -44,11 +44,11 @@ export const Videos = () => {
                                 </div>
                                 <div className="flex gap-2 my-3">
                                     <div>
-                                        <img className="w-15 rounded-full" src={video.channelId.profilePicture} alt="channel-profile" />
+                                        <img className="w-15 rounded-full" src={video.channelId?.profilePicture || "https://via.placeholder.com/40"} alt="channel-profile" />
                                     </div>
                                     <div className="w-full px-2">
                                         <h1 className="font-semibold">{video.title}</h1>
-                                        <h3 className="text-gray-600">{video.channelId.name}</h3>
+                                        <h3 className="text-gray-600">{video.channelId?.name || "Unknown Channel"}</h3>
                                         <span className="text-gray-600">{formatViews(video.views)}</span> ● <span className="text-gray-600">{formatDistanceToNow(new Date(video.uploadDate), { addSuffix: true })}</span>
                                     </div>
                                 </div>

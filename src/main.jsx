@@ -13,6 +13,7 @@ import { HandleError } from "./components/HandleError.jsx"
 import { ChannelInfo } from './components/ChannelInfo.jsx';
 import { Provider } from "react-redux";
 import { store } from "./services/store.js";
+import { CreateChannelForm } from './components/CreateChannel.jsx';
 
 
 const router = createBrowserRouter([
@@ -35,7 +36,8 @@ const router = createBrowserRouter([
             <VideoDetails />
           </ProtectedRoute>)
       },
-      { path: "channelinfo", element: <ChannelInfo /> },
+      { path: "createchannel", element: <CreateChannelForm /> },
+      { path: "channelinfo/:id", element: <ChannelInfo /> }
     ]
   }
 ])

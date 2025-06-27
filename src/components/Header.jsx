@@ -3,7 +3,7 @@ import { CiSearch, CiMenuKebab } from "react-icons/ci";
 import { FaMicrophone } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
 import { LiaUserCircleSolid } from "react-icons/lia";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SliderContext } from "../context/sliderContext";
 import { IoSettingsOutline } from "react-icons/io5";
 import { VscReport } from "react-icons/vsc";
@@ -19,11 +19,15 @@ import { logout } from "../services/authSlice.js";
 export const Header = ({ openModal, isOpen }) => {
   const { setIsSliderOpen } = useContext(SliderContext);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
+  // const [channel, setChannel] = useState(null);
   const dispatch = useDispatch();
-  
+  const navigate = useNavigate();
+
+
   let token = localStorage.getItem("token");
   const user = useSelector((state) => state.auth.user);
   const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -32,6 +36,9 @@ export const Header = ({ openModal, isOpen }) => {
     window.location.href = "/";
   }
 
+  const handleNavigate = () => {
+    navigate("/videos")
+  }
 
   return (
     <>
@@ -41,7 +48,7 @@ export const Header = ({ openModal, isOpen }) => {
           <button onClick={() => setIsSliderOpen(prev => !prev)}>
             <AiOutlineMenu className="cursor-pointer text-gray-700 text-xl" />
           </button>
-          <div className="max-sm:w-0 mx-2 w-22">
+          <div onClick={handleNavigate} className="max-sm:w-0 mx-2 w-22 cursor-pointer">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"
               alt="YouTube"
@@ -146,7 +153,7 @@ export const Header = ({ openModal, isOpen }) => {
                 {
                   token && (
                     <>
-                      <Link to={"/channelinfo"}>
+                      <Link to={"/createchannel"}>
                         <li className="w-full flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-t-xl"><span className="ml-4 text-xl text-gray-800"><TbUserPentagon /></span>Create channel</li>
                       </Link>
                       <li onClick={handleLogout} className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><PiSignOutFill /></span>Sign Out</li>

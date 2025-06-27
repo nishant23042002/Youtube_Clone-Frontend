@@ -61,7 +61,7 @@ export const SignIn = () => {
                 JSON.stringify({
                     name: data.loggedInUser.name,
                     profilePic: data.loggedInUser.profilePic_URL,
-                    id: data.loggedInUser._id,
+                    id: data.loggedInUser.id,
                 })
             );
 
@@ -70,7 +70,7 @@ export const SignIn = () => {
                     user: {
                         name: data.loggedInUser.name,
                         profilePic: data.loggedInUser.profilePic_URL,
-                        id: data.loggedInUser._id,
+                        id: data.loggedInUser.id, // ✅ make sure this is present
                     },
                     token: data.token,
                 })
