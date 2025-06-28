@@ -17,11 +17,12 @@ export const SignIn = () => {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        setMessage(""); // Reset message
+        setMessage(""); // Reset
+
+        let response;
+        let data;
 
         try {
-            let response;
-
             if (isRegistering) {
                 const formData = new FormData();
                 formData.append("userName", name);
@@ -34,27 +35,42 @@ export const SignIn = () => {
                     body: formData,
                 });
 
-            } else {
-                response = await fetch("http://localhost:4001/api/v1/user/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ email, password }),
-                });
-                // Login sends JSON
-                if (!email || !password) {
-                    setMessage("Invalid email or password!!");
+                data = await response.json(); // ✅ move inside block
+                console.log("REGISTER:", data);
+
+                if (!response.ok) {
+                    setMessage(data.message || "Error registering user");
                     return;
                 }
+
+                setMessage(data.message);
+                setPassword("")
+                setIsRegistering(false);
+                return;
             }
-            const data = await response.json();
-            console.log(data);
+
+            // Login block
+            if (!email || !password) {
+                setMessage("Invalid email or password!!");
+                return;
+            }
+
+            response = await fetch("http://localhost:4001/api/v1/user/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            data = await response.json(); // ✅ safe here too
+            console.log("LOGIN:", data);
 
             if (!response.ok) {
-                throw new Error(data.message || "Something went wrong");
+                throw new Error(data.message || "Login failed");
             }
 
+            // Save to localStorage
             localStorage.setItem("token", data.token);
             localStorage.setItem(
                 "user",
@@ -70,17 +86,17 @@ export const SignIn = () => {
                     user: {
                         name: data.loggedInUser.name,
                         profilePic: data.loggedInUser.profilePic_URL,
-                        id: data.loggedInUser.id, // ✅ make sure this is present
+                        id: data.loggedInUser.id,
                     },
                     token: data.token,
                 })
             );
 
-            setMessage(data.message);
-            setIsRegistering(false);
-            navigate("/videos")
-            // Optional: Save token, redirect, etc.
+            setMessage(data.message); // "Login successfully"
+            navigate("/videos");
+
         } catch (err) {
+            console.error(err);
             setMessage(`❌ ${err.message}`);
         }
     }

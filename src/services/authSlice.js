@@ -7,6 +7,7 @@ const initialState = {
     user: savedUser ? JSON.parse(savedUser) : null,
     token: savedToken,
     isAuthenticated: !!savedToken,
+    channel: null,
 };
 
 const authSlice = createSlice({
@@ -34,8 +35,11 @@ const authSlice = createSlice({
             localStorage.removeItem("user")
             localStorage.removeItem("token")
         },
+        setChannel: (state, action) => {
+            state.channel = action.payload;
+        },
     },
 });
 
-export const { loginSuccess, logout } = authSlice.actions;
+export const { loginSuccess, logout, setChannel } = authSlice.actions;
 export default authSlice.reducer;

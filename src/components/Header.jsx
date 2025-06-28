@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { CiSearch, CiMenuKebab } from "react-icons/ci";
 import { FaMicrophone } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -13,7 +13,8 @@ import { GoMoon } from "react-icons/go";
 import { TbUserPentagon } from "react-icons/tb";
 import { PiSignOutFill } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../services/authSlice.js";
+import { logout, setChannel } from "../services/authSlice.js";
+
 
 
 export const Header = ({ openModal, isOpen }) => {
@@ -27,6 +28,7 @@ export const Header = ({ openModal, isOpen }) => {
   let token = localStorage.getItem("token");
   const user = useSelector((state) => state.auth.user);
   const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
+  const channel = useSelector((state) => state.auth.channel);
 
 
   const handleLogout = () => {
@@ -40,6 +42,23 @@ export const Header = ({ openModal, isOpen }) => {
   const handleNavigate = () => {
     navigate("/videos")
   }
+
+  useEffect(() => {
+    const fetchUserChannel = async () => {
+      if (user?.id && token) {
+        try {
+          const res = await fetch(`http://localhost:4001/api/v1/channels/user/${user.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            dispatch(setChannel(data.channel));
+          }
+        } catch (err) {
+          console.error("Failed to fetch user channel:", err.message);
+        }
+      }
+    };
+    fetchUserChannel();
+  }, [user?.id, token, dispatch]);
 
   return (
     <>
@@ -91,39 +110,39 @@ export const Header = ({ openModal, isOpen }) => {
         {/* Right Section */}
         <div className="max-sm:mx-0 flex items-center gap-4 mx-6">
           <div className="flex gap-2">
-            {
-              !isLoggedIn ? (
-                <>
-                  <button className="cursor-pointer max-[510px]:hidden" onClick={openModal}>
-                    <CiMenuKebab size={"20px"} />
+
+            {!isLoggedIn ? (
+              <>
+                <button className="cursor-pointer max-[510px]:hidden" onClick={openModal}>
+                  <CiMenuKebab size={"20px"} />
+                </button>
+                <Link to="/signin">
+                  <button className="flex justify-center items-center border w-24 border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-1 rounded-full gap-2 mt-2">
+                    <span className="text-blue-600 text-xl">
+                      <LiaUserCircleSolid />
+                    </span>
+                    <h1 className="max-sm:text-sm text-blue-600 font-semibold">Sign In</h1>
                   </button>
-                  <Link to="/signin">
-                    <button className="flex justify-center items-center border w-24 border-gray-300 hover:bg-blue-200 duration-200 cursor-pointer p-2 rounded-full gap-2 mt-2">
-                      <span className="text-blue-600 text-xl">
-                        <LiaUserCircleSolid />
-                      </span>
-                      <h1 className="max-sm:text-sm text-blue-600 font-semibold">{token ? user : "Sign in"}</h1>
-                    </button>
-                  </Link>
-                </>
-              ) : (
-                <div className="flex items-center justify-center gap-2">
-                  <button
-                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gray-300 overflow-hidden flex items-center justify-center mr-2 cursor-pointer mt-2"
-                    onClick={openModal}
-                  >
-                    <img
-                      className="h-full object-cover rounded-full"
-                      src={user.profilePic}
-                      alt="profile"
-                    />
-                  </button>
-                  <div className="hidden min-[460px]:block">
-                    <h1 className="text-sm sm:text-base font-bold md:w-30">{user.name}</h1>
-                  </div>
+                </Link>
+              </>
+            ) : (
+              <div className="flex items-center justify-center gap-2">
+                <button
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gray-300 overflow-hidden flex items-center justify-center mr-2 cursor-pointer mt-2"
+                  onClick={openModal}
+                >
+                  <img
+                    className="h-full object-cover rounded-full"
+                    src={user?.profilePic || "/default-avatar.png"}
+                    alt="profile"
+                  />
+                </button>
+                <div className="hidden min-[460px]:block">
+                  <h1 className="text-sm sm:text-base font-bold md:w-30">{user?.name}</h1>
                 </div>
-              )
-            }
+              </div>
+            )}
+
 
           </div>
         </div>
@@ -154,9 +173,16 @@ export const Header = ({ openModal, isOpen }) => {
                 {
                   token && (
                     <>
-                      <Link to={"/createchannel"}>
-                        <li className="w-full flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-t-xl"><span className="ml-4 text-xl text-gray-800"><TbUserPentagon /></span>Create channel</li>
-                      </Link>
+                      {
+                        channel ? (
+                          <Link to={`/channelinfo/${channel._id}`}>
+                            <li className="w-full flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-t-xl"><span className="ml-4 text-xl text-gray-800"><TbUserPentagon /></span>My Channel</li>
+                          </Link>
+                        ) :
+                          (<Link to={"/createchannel"}>
+                            <li className="w-full flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200 hover:rounded-t-xl"><span className="ml-4 text-xl text-gray-800"><TbUserPentagon /></span>Create channel</li>
+                          </Link>)
+                      }
                       <li onClick={handleLogout} className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-200"><span className="ml-4 text-xl text-gray-800"><PiSignOutFill /></span>Sign Out</li>
                     </>
                   )

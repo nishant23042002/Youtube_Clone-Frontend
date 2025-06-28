@@ -15,7 +15,12 @@ export const VideoDetails = () => {
     const [comments, setComments] = useState([]);
     const [showCommentInput, setShowCommentInput] = useState(false);
     const [newComment, setNewComment] = useState("");
+    const [editingCommentId, setEditingCommentId] = useState(null);
+    const [editedText, setEditedText] = useState("");
 
+
+    const token = localStorage.getItem("token")
+    const user = JSON.parse(localStorage.getItem("user"));
 
     const toggleLike = () => {
         if (liked) {
@@ -51,12 +56,85 @@ export const VideoDetails = () => {
     useEffect(() => {
         getVideo();
         getCommentsOfVideos();
-
     }, [id])
 
     const handleAddComment = async () => {
-        
+        try {
+            let res = await fetch(`http://localhost:4001/api/v1/comments/${id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ text: newComment })
+            })
+
+            const data = await res.json();
+            console.log(data);
+            if (res.ok) {
+                setNewComment("");
+                setShowCommentInput(false);
+                getCommentsOfVideos(); // refresh the comment list
+            } else {
+                alert(data.message || "Failed to add comment");
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
+
+    const handleDeleteComment = async (commentId) => {
+        try {
+            const res = await fetch(`http://localhost:4001/api/v1/comments/${commentId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                // Remove the deleted comment from state
+                setComments((prev) => prev.filter((c) => c._id !== commentId));
+            } else {
+                alert(data.message || "Failed to delete comment");
+            }
+        } catch (err) {
+            console.error("Delete comment error:", err);
+            alert("Something went wrong");
+        }
+    }
+
+    const handleEditComment = async (commentId) => {
+        if (!editedText.trim()) return;
+
+        try {
+            const res = await fetch(`http://localhost:4001/api/v1/comments/${commentId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ text: editedText })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                setComments((prev) =>
+                    prev.map((c) => (c._id === commentId ? { ...c, text: editedText } : c))
+                );
+                setEditingCommentId(null);
+                setEditedText("");
+            } else {
+                alert(data.message || "Failed to update comment");
+            }
+        } catch (err) {
+            console.error("Edit error:", err);
+            alert("Something went wrong");
+        }
+    };
+
 
     return (
         <>
@@ -65,7 +143,7 @@ export const VideoDetails = () => {
                 <div className="rounded-2xl mx-6 max-xl:w-auto w-300">
                     {/* Video and title */}
                     <div className="flex flex-col rounded-2xl">
-                        <img className="rounded-2xl" src="https://marketplace.canva.com/EAEqfS4X0Xw/1/0/1600w/canva-most-attractive-youtube-thumbnail-wK95f3XNRaM.jpg" alt="thumbnail" />
+                        <video src={videoInfo?.videoFile} controls autoPlay></video>
                         <h1 className="font-bold my-2">{videoInfo?.title}</h1>
                     </div>
 
@@ -88,8 +166,8 @@ export const VideoDetails = () => {
                         {/* like-dislike section */}
                         <div className="flex gap-3 max-md:hidden">
                             <div className="bg-gray-200 flex justify-center items-center rounded-3xl">
-                                <div onClick={toggleLike} className="flex items-center hover:bg-gray-300 rounded-l-3xl justify-center gap-3 p-3 cursor-pointer duration-300 border-r-1 border-gray-300"><SlLike size={"20px"} />{likeCount}</div>
-                                <div className="hover:bg-gray-300 rounded-r-3xl p-3.5 cursor-pointer duration-300"><SlDislike size={"20px"} /></div>
+                                <div onClick={toggleLike} className={`${liked ? "flex items-center hover:bg-gray-300 rounded-l-3xl justify-center gap-3 p-3 cursor-pointer duration-300 border-r-1 text-white bg-gray-600" : "flex items-center hover:bg-gray-300 rounded-l-3xl justify-center gap-3 p-3 cursor-pointer duration-300 border-r-1 border-gray-300"}`}><SlLike size={"20px"} />{likeCount}</div>
+                                <div className="hover:bg-gray-300  rounded-r-3xl p-3.5 cursor-pointer duration-300"><SlDislike size={"20px"} /></div>
                             </div>
                             <div className="bg-gray-200 hover:bg-gray-300 flex justify-center items-center cursor-pointer rounded-3xl p-2 duration-300">
                                 <div className="flex items-center justify-center gap-2"><span><PiShareFat size={"20px"} /></span>Share</div>
@@ -151,10 +229,10 @@ export const VideoDetails = () => {
 
 
                     {/* Add comments */}
-                    <div className="mt-6">
+                    <div className="my-6">
                         <h1 className="font-bold text-xl mb-4">{comments.length} Comments</h1>
                         <div className="flex gap-4">
-                            <img className="w-12 h-12 rounded-full" src="" alt="profile" />
+                            <img className="w-12 h-12 rounded-full" src={user.profilePic} alt="profile" />
                             <div className="w-full mr-4">
                                 <div onClick={() => setShowCommentInput(true)}>
                                     <h1 className="text-md font-semibold text-gray-600 border-b-2">Comment Section</h1>
@@ -162,7 +240,7 @@ export const VideoDetails = () => {
                                 {showCommentInput && (
                                     <div>
                                         <input
-                                        type="text"
+                                            type="text"
                                             className="w-full p-3 text-xl outline-none"
                                             placeholder="Write a comment"
                                             value={newComment}
@@ -179,15 +257,67 @@ export const VideoDetails = () => {
 
 
 
-                        {comments.map((comment) => (
-                            <div key={comment._id} className="flex gap-4 mt-6">
-                                <img className="w-12 h-12 rounded-full" src={comment?.userId?.profilePicture} alt="avatar" />
-                                <div className="flex flex-col">
-                                    <h1 className="text-sm font-semibold text-gray-700">@{comment?.userId?.userName}</h1>
-                                    <p className="text-sm text-gray-700">{comment?.text}</p>
+                        {comments.map((comment) => {
+                            const isOwner = comment.userId?._id === user?.id;
+                            const isEditing = editingCommentId === comment._id;
+
+                            return (
+                                <div key={comment._id} className="flex gap-4 my-6">
+                                    <img className="w-12 h-12 rounded-full" src={comment?.userId?.profilePicture} alt="avatar" />
+                                    <div className="flex flex-col w-full">
+                                        <div className="flex justify-between">
+                                            <h1 className="text-sm font-semibold text-gray-700">@{comment.userId?.userName}</h1>
+                                            {isOwner && (
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            setEditingCommentId(comment._id);
+                                                            setEditedText(comment.text);
+                                                        }}
+                                                        className="text-blue-500 text-sm hover:underline"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteComment(comment._id)}
+                                                        className="text-red-500 text-sm hover:underline"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {isEditing ? (
+                                            <>
+                                                <textarea
+                                                    className="border p-2 mt-1 rounded w-full text-sm"
+                                                    value={editedText}
+                                                    onChange={(e) => setEditedText(e.target.value)}
+                                                />
+                                                <div className="flex justify-end gap-2 mt-1">
+                                                    <button
+                                                        onClick={() => setEditingCommentId(null)}
+                                                        className="text-sm hover:underline"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleEditComment(comment._id)}
+                                                        className="text-sm text-green-600 font-semibold"
+                                                    >
+                                                        Save
+                                                    </button>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <p className="text-sm text-gray-700">{comment.text}</p>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
+
                     </div>
                 </div>
 

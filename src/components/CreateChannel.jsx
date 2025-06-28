@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setChannel } from "../services/authSlice.js";
+
 
 export const CreateChannelForm = () => {
     const [name, setName] = useState("");
@@ -9,7 +12,9 @@ export const CreateChannelForm = () => {
     const [message, setMessage] = useState("")
     const user = useSelector((state) => state.auth.user);
     const token = useSelector((state) => state.auth.token);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     
     const userId = user?.id;
     if (!user) {
@@ -34,10 +39,10 @@ export const CreateChannelForm = () => {
                 },
             })
             const data = await response.json();
-            console.log(data);
+            console.log(data.channel._id);
             setMessage(data.message);
             if (response.ok) {
-                navigate(`/channelinfo/${data.channel._id}`);
+                dispatch(setChannel(data.channel));
             } else {
                 console.error("Channel creation failed:", data.message);
             }
