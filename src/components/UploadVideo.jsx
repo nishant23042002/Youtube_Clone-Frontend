@@ -1,69 +1,63 @@
-import axios from "axios";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
-
-export const UploadVideo = () => {
-    const { channelId } = useParams();
-    const navigate = useNavigate();
-
-    const [formData, setFormData] = useState({
-        title: "",
-        description: "",
-        uploader: "", // Set from logged-in user (optional)
-        thumbnailduration: "",
-        uploadDate: new Date().toISOString().slice(0, 10), // today's date
-    });
-
+export const UploadVideo = ({ onSuccess, channelId }) => {
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [videoFileUrl, setVideoFileUrl] = useState(null);
     const [thumbnail, setThumbnail] = useState(null);
-    const [videoFile, setVideoFile] = useState(null);
+    const [thumbnailduration, setThumbnailDuration] = useState("");
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
 
+    const user = JSON.parse(localStorage.getItem("user"));
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const formData = new FormData();
 
-        const payload = new FormData();
-        payload.append("title", formData.title);
-        payload.append("description", formData.description);
-        payload.append("thumbnailduration", formData.thumbnailduration);
-        payload.append("uploadDate", formData.uploadDate);
-        payload.append("channelId", channelId);
-        payload.append("uploader", formData.uploader); // If you have user info in context/state
-
-        if (thumbnail) payload.append("thumbnail", thumbnail);
-        if (videoFile) payload.append("videoFile", videoFile);
+        formData.append("title", title);
+        formData.append("description", description);
+        formData.append("thumbnailduration", thumbnailduration);
+        formData.append("channelId", channelId);
+        formData.append("uploader", user?.id);
+        formData.append("videoFile", videoFileUrl);
+        formData.append("thumbnail", thumbnail);
 
         try {
-            const res = await axios.post("http://localhost:4001/api/v1/videos/", payload, {
+            const token = localStorage.getItem("token");
+            const res = await axios.post("http://localhost:4001/api/v1/videos", formData, {
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
-                },
+                }
             });
 
-            if (res.status === 201) {
-                alert("Video uploaded successfully!");
-                navigate(`/channel/${channelId}`);
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Video upload failed!");
+            onSuccess(res.data.video);
+        } catch (error) {
+            console.error("❌ Upload failed:", error.response?.data || error.message);
         }
     };
 
+
     return (
-        <div className="max-w-2xl mx-auto p-4">
-            <h2 className="text-xl font-bold mb-4">Upload New Video</h2>
-            <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
-                <input type="text" name="title" placeholder="Title" onChange={handleChange} required className="w-full p-2 border" />
-                <textarea name="description" placeholder="Description" onChange={handleChange} required className="w-full p-2 border" />
-                <input type="text" name="thumbnailduration" placeholder="Duration (e.g. 10:05)" onChange={handleChange} required className="w-full p-2 border" />
-                <input placeholder="channel profile picture" type="file" name="thumbnail" accept="image/*" onChange={(e) => setThumbnail(e.target.files[0])} required /><br/>
-                <input placeholder="video" type="file" name="videoFile" accept="video/*" onChange={(e) => setVideoFile(e.target.files[0])} required />
-                <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Upload</button>
-            </form>
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <input className="w-full bg-blue-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required  />
+            <textarea className="w-full bg-blue-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} required />
+            <input className="w-full bg-blue-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" placeholder="Duration" value={thumbnailduration} onChange={(e) => setThumbnailDuration(e.target.value)} required />
+            <input className="w-full bg-blue-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Video Url" type="text" onChange={(e) => setVideoFileUrl(e.target.value)} required />
+            <div className="p-2">
+                <label htmlFor="img">Channel Profile</label>
+                <input className="w-full text-sm text-gray-600 bg-blue-300 p-2 rounded-lg
+          file:mr-4 file:py-2 file:px-4
+          file:rounded-full file:border-0
+          file:text-sm file:font-semibold
+          file:bg-blue-50 file:text-blue-700
+          hover:file:bg-blue-100 cursor-pointer" type="file" id="img" name="img" accept="image/*" onChange={(e) => setThumbnail(e.target.files[0])} required />
+            </div>
+            <button type="submit" className="bg-blue-600 hover:bg-green-600 text-white px-4 py-2 rounded w-full items-center cursor-pointer">
+                Upload
+            </button>
+        </form>
     );
 };
+

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { deleteVideo } from "../services/videoService.js";
 import { CiMenuKebab } from "react-icons/ci";
+import { UploadVideo } from "./UploadVideo.jsx";
 
 
 export const ChannelInfo = () => {
@@ -9,6 +10,7 @@ export const ChannelInfo = () => {
     const [channelInfo, setChannelInfo] = useState(null);
     const [openMenu, setOpenMenu] = useState(false);
     const [videos, setVideos] = useState([]);
+    const [showUploadModal, setShowUploadModal] = useState(false);
     let { id } = useParams();
 
 
@@ -36,9 +38,10 @@ export const ChannelInfo = () => {
             setVideos((prev) => prev.filter((vid) => vid._id !== videoId));
         } catch (err) {
             console.error("Delete failed", err);
-            alert("Failed to delete video");
         }
     };
+
+
 
 
     return (
@@ -89,11 +92,36 @@ export const ChannelInfo = () => {
                                             </span>
                                         </div>
 
-                                        <div className="flex justify-around items-center">
+                                        <div className="flex justify-start items-center">
                                             <button className="mt-4 px-4 py-2 bg-black text-white font-semibold rounded-full cursor-pointer">
                                                 Subscribe
-                                            </button>                                          
+                                            </button>
+                                            <div className="flex justify-end items-center my-4 w-full max-w-4xl">
+                                                <button
+                                                    onClick={() => setShowUploadModal(true)}
+                                                    className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-green-700 cursor-pointer"
+                                                >
+                                                    Upload Video
+                                                </button>
+                                            </div>
                                         </div>
+                                        {showUploadModal && (
+                                            <div className="fixed inset-0 bg-white bg-opacity-40 flex justify-center items-center z-50">
+                                                <div className=" p-6 rounded-lg max-w-md w-full relative bg-blue-200">
+                                                    <button
+                                                        className="absolute top-2 right-2 text-gray-500 cursor-pointer"
+                                                        onClick={() => setShowUploadModal(false)}
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                    <button className="text-lg font-semibold mb-4 cursor-pointer">Upload Video</button>
+                                                    <UploadVideo onSuccess={(newVideo) => {
+                                                        setVideos(prev => [newVideo, ...prev]);
+                                                        setShowUploadModal(false);
+                                                    }} channelId={channelInfo._id} />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
