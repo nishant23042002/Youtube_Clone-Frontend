@@ -6,3 +6,8 @@ export const fetchAllVideos = async () => {
 };
 
 
+
+export const deleteVideo = async (videoId) => {
+  const res = await api.delete(`/videos/${videoId}`);
+  return res.data;
+};

@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { deleteVideo } from "../services/videoService.js";
+import { CiMenuKebab } from "react-icons/ci";
 
 export const ChannelInfo = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [channelInfo, setChannelInfo] = useState(null);
+    const [openMenu, setOpenMenu] = useState(true);
     const [videos, setVideos] = useState([]);
     let { id } = useParams();
 
@@ -26,13 +29,22 @@ export const ChannelInfo = () => {
         fetchChannelAndVideos();
     }, [id]);
 
- 
+    const handleDelete = async (videoId) => {
+        try {
+            await deleteVideo(videoId);
+            setVideos((prev) => prev.filter((vid) => vid._id !== videoId));
+        } catch (err) {
+            console.error("Delete failed", err);
+            alert("Failed to delete video");
+        }
+    };
+
 
     return (
         <div className="flex flex-col justify-center items-center my-4 px-4">
             {
                 channelInfo && (
-                    <>                   
+                    <>
                         <div className="w-full max-w-4xl rounded-xl overflow-hidden">
                             <div className="w-full">
                                 <img
@@ -86,6 +98,7 @@ export const ChannelInfo = () => {
                         <div className="w-full border border-gray-300">
 
                         </div>
+
                         <div className="flex justify-center items-start flex-wrap max-w-4xl pt-9">
                             {videos.length === 0 ? (
                                 <p className="text-gray-600">No videos uploaded yet.</p>
@@ -107,37 +120,19 @@ export const ChannelInfo = () => {
                                                     <span>{new Date(video.uploadDate).toLocaleDateString()}</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                        {/* {isOwner && (
-                                            <div className="flex gap-2 mt-2">
-                                                <Link
-                                                    to={`/editvideo/${video._id}`}
-                                                    className="text-blue-500 text-sm underline"
-                                                >
-                                                    Edit
-                                                </Link>
-                                                <button
-                                                    onClick={async () => {
-                                                        try {
-                                                            const res = await fetch(`http://localhost:4001/api/v1/videos/${video._id}`, {
-                                                                method: "DELETE",
-                                                                headers: {
-                                                                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                                                                },
-                                                            });
-                                                            if (res.ok) {
-                                                                setVideos((prev) => prev.filter(v => v._id !== video._id));
-                                                            }
-                                                        } catch (err) {
-                                                            console.error("Delete failed:", err.message);
-                                                        }
-                                                    }}
-                                                    className="text-red-500 text-sm"
-                                                >
-                                                    Delete
-                                                </button>
+                                            <div onClick={() => setOpenMenu((prev) => !prev)}>
+                                                <CiMenuKebab className="mt-2" size={20} />
                                             </div>
-                                        )} */}
+                                        </div>
+                                        {
+                                            openMenu && (
+                                                <div className="flex justify-end gap-3 mt-3">
+                                                    <button className="bg-red-500 px-3 py-1 text-white rounded" onClick={() => handleDelete(video._id)}>
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            )
+                                        }
                                     </div>
                                 ))
                             )}
