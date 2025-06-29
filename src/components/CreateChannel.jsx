@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setChannel } from "../services/authSlice.js";
 
@@ -12,10 +11,9 @@ export const CreateChannelForm = () => {
     const [message, setMessage] = useState("")
     const user = useSelector((state) => state.auth.user);
     const token = useSelector((state) => state.auth.token);
-    // const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    
+
     const userId = user?.id;
     if (!user) {
         return <p className="text-center mt-10 text-red-600">You must be logged in to create a channel.</p>;
@@ -56,7 +54,7 @@ export const CreateChannelForm = () => {
         <div className="max-w-md mx-auto p-4 border rounded shadow-md">
             <h1>{message}</h1>
             <h2 className="text-xl font-semibold mb-4 text-center">Create Your Channel</h2>
-            {/* {message && <p className="text-center text-sm mb-2 text-red-500">{message}</p>} */}
+
             <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
                 <div>
                     <label className="block font-medium mb-1">Channel Name</label>

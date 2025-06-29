@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 
 export const SliderContext = createContext();
@@ -12,3 +12,5 @@ export const SliderProvider = ({ children }) => {
         </SliderContext.Provider>
     );
 };
+
+export const useSlider = () => useContext(SliderContext)

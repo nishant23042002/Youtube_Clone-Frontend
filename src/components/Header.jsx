@@ -14,13 +14,15 @@ import { TbUserPentagon } from "react-icons/tb";
 import { PiSignOutFill } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setChannel } from "../services/authSlice.js";
+import { useModal } from "../context/modalContext.jsx";
 
 
 
-export const Header = ({ openModal, isOpen }) => {
+
+export const Header = () => {
   const { setIsSliderOpen } = useContext(SliderContext);
-  const [showMobileSearch, setShowMobileSearch] = useState(false);
-  // const [channel, setChannel] = useState(null);
+  const [searchText, setSearchText] = useState("");
+  const { isOpen, toggleModal } = useModal();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -43,6 +45,24 @@ export const Header = ({ openModal, isOpen }) => {
     navigate("/videos")
   }
 
+  const handleSearch = async () => {
+    if (!searchText.trim()) return;
+    try {
+      const res = await fetch("http://localhost:4001/api/v1/videos")
+      const data = await res.json();
+      const allVideos = data.videos;
+
+      const filtered = allVideos.filter(video =>
+        video.title.toLowerCase().includes(searchText.toLowerCase())
+      );
+ 
+      navigate("/videos", { state: { searchResults: filtered } });
+
+    } catch (err) {
+      console.error("Search failed:", err.message);
+    }
+  }
+
   useEffect(() => {
     const fetchUserChannel = async () => {
       if (user?.id && token) {
@@ -62,7 +82,7 @@ export const Header = ({ openModal, isOpen }) => {
 
   return (
     <>
-      <header className="w-full flex items-center justify-between relative bg-white z-50">
+      <div className="w-full flex items-center justify-between relative bg-white z-50">
         {/* Left Section */}
         <div className="flex items-center gap-2 ml-3">
           <button onClick={() => setIsSliderOpen(prev => !prev)}>
@@ -82,28 +102,18 @@ export const Header = ({ openModal, isOpen }) => {
           {/* Desktop Search */}
           <div className="hidden sm:flex w-full justify-center items-center">
             <input
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
               type="text"
               placeholder="Search"
               className="w-[40%] px-4 font-semibold p-1 outline-none border border-gray-300 rounded-tl-3xl rounded-bl-3xl"
             />
-            <button className="px-2 py-1.5 bg-gray-100 border border-l-0 border-gray-300 rounded-r-full hover:bg-gray-300 duration-200 cursor-pointer">
+            <button onClick={handleSearch} className="px-2 py-1.5 bg-gray-100 border border-l-0 border-gray-300 rounded-r-full hover:bg-gray-300 duration-200 cursor-pointer">
               <CiSearch size={"20px"} color="gray" />
             </button>
             <button className="ml-2 p-2 bg-gray-200 border border-gray-300 hover:bg-gray-300 duration-200 rounded-full cursor-pointer">
               <FaMicrophone size={"15px"} />
             </button>
-          </div>
-
-          {/* Mobile Search Icon */}
-          <div className="sm:hidden flex items-center gap-2">
-            {!showMobileSearch && (
-              <button
-                onClick={() => setShowMobileSearch((prev) => !prev)}
-                className="p-2 rounded-full bg-gray-200 cursor-pointer"
-              >
-                <CiSearch size={14} />
-              </button>
-            )}
           </div>
         </div>
 
@@ -113,7 +123,7 @@ export const Header = ({ openModal, isOpen }) => {
 
             {!isLoggedIn ? (
               <>
-                <button className="cursor-pointer max-[510px]:hidden" onClick={openModal}>
+                <button className="cursor-pointer max-[510px]:hidden" onClick={toggleModal}>
                   <CiMenuKebab size={"20px"} />
                 </button>
                 <Link to="/signin">
@@ -129,7 +139,7 @@ export const Header = ({ openModal, isOpen }) => {
               <div className="flex items-center justify-center gap-2">
                 <button
                   className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gray-300 overflow-hidden flex items-center justify-center mr-2 cursor-pointer mt-2"
-                  onClick={openModal}
+                  onClick={toggleModal}
                 >
                   <img
                     className="h-full object-cover rounded-full"
@@ -147,24 +157,23 @@ export const Header = ({ openModal, isOpen }) => {
           </div>
         </div>
 
-        {/* Mobile Search Input (Overlay-style) */}
-        {showMobileSearch && (
-          <div className="absolute left-16 px-2  sm:hidden flex items-center">
-            <input
-              autoFocus
-              type="text"
-              placeholder="Search"
-              className="flex-1 px-2 py-[3px] border border-gray-300 rounded-l-full outline-none"
-            />
-            <button
-              className="px-2 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-full cursor-pointer"
-              onClick={() => setShowMobileSearch((prev) => !prev)}
-            >
-              <CiSearch size={14} />
-            </button>
-          </div>
-        )}
-      </header>
+        <div className="absolute left-16 px-2  sm:hidden flex items-center">
+          <input
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            autoFocus
+            type="text"
+            placeholder="Search"
+            className="flex-1 px-2 py-[3px] border border-gray-300 rounded-l-full outline-none"
+          />
+          <button
+            className="px-2 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-full cursor-pointer"
+            onClick={handleSearch}
+          >
+            <CiSearch size={14} />
+          </button>
+        </div>
+      </div>
       <div>
         {
           isOpen && (
@@ -196,6 +205,34 @@ export const Header = ({ openModal, isOpen }) => {
             </div>
           )
         }
+        <div className="w-full overflow-x-auto whitespace-nowrap py-3 bg-white dark:bg-gray-900 px-2">
+          <div className="flex space-x-3 items-center mx-9">
+            <button onClick={() => navigate("/videos", { state: null })} className="px-4 py-2 text-sm rounded-full bg-black text-white dark:bg-white dark:text-black cursor-pointer">
+              All
+            </button>
+            <button className="px-4 py-2 text-sm rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+              Music
+            </button>
+            <button className="px-4 py-2 text-sm rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+              Live
+            </button>
+            <button className="px-4 py-2 text-sm rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+              Gaming
+            </button>
+            <button className="px-4 py-2 text-sm rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+              News
+            </button>
+            <button className="px-4 py-2 text-sm rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+              Sports
+            </button>
+            <button className="px-4 py-2 text-sm rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+              Education
+            </button>
+            <button className="px-4 py-2 text-sm rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+              Trending
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );

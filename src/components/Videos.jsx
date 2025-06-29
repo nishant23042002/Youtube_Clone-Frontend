@@ -1,33 +1,39 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { fetchAllVideos } from "../services/videoService.js";
 import { formatDistanceToNow } from "date-fns";
+import { useSlider } from "../context/sliderContext.jsx";
+
 
 
 
 
 export const Videos = () => {
     const [videos, setVideos] = useState([]);
-
+    const location = useLocation();
+    const searchResults = location.state?.searchResults;
+    const { isSliderOpen } = useSlider();
 
 
     useEffect(() => {
         const getVideos = async () => {
             try {
-                const data = await fetchAllVideos();
-                setVideos(data.videos)
-                console.log(data);
+                if (searchResults && Array.isArray(searchResults)) {
+                    setVideos(searchResults);
+                } else {
+                    const data = await fetchAllVideos();
+                    console.log(data);
+                    setVideos(data.videos); 
+                }
             } catch (err) {
-                console.log(err);
-            } finally {
-                console.log("Success");
+                console.error("Error loading videos:", err);
             }
         }
         getVideos();
-    }, [])
+    }, [searchResults])
 
 
-    if(videos.length === 0) {
+    if (videos.length === 0) {
         return (
             <div className="flex justify-center items-center">
                 <h1 className="text-2xl font-bold">No videos</h1>
@@ -44,9 +50,9 @@ export const Videos = () => {
     }
 
     return (
-        <div className="w-[90%] max-[700px]:mx-auto  flex flex-wrap justify-end items-center gap-4 my-12 mx-20">
+        <div className={`${isSliderOpen ? "w-[90%] max-[700px]:mx-auto  flex flex-wrap  justify-end items-center gap-4 my-12 mx-20" : "w-[90%] max-[700px]:mx-auto  flex flex-wrap  justify-start items-center gap-4 my-12 mx-20"}`}>
             {
-                videos.map((video) => {                  
+                videos.map((video) => {
                     return (
                         <Link key={video._id} to={`/video/${video._id}`}>
                             <div className="max-sm:w-78 w-88 min-h-80 p-1 rounded-2xl shadow-xl border border-gray-200 cursor-pointer">

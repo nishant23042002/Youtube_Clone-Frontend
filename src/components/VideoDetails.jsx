@@ -8,7 +8,7 @@ import { RelatedVideos } from "./RelatedVideos";
 import { useParams } from "react-router-dom";
 
 export const VideoDetails = () => {
-    const { id } = useParams(); // Get video ID from URL
+    const { id } = useParams();
     const [videoInfo, setVideo] = useState(null);
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
@@ -155,7 +155,7 @@ export const VideoDetails = () => {
                                 <img className="rounded-full" src={videoInfo?.channelId?.profilePicture} alt="profile-picture" />
                             </div>
                             <div className="mr-5">
-                                <h3 className="flex items-center gap-2 font-semibold w-42">{videoInfo?.channelId?.name} <span><IoCheckmarkDoneCircleSharp color="gray" /></span></h3>
+                                <h3 className="flex items-center gap-2 font-semibold w-42">{videoInfo?.channelId?.name || "unknown user"} <span><IoCheckmarkDoneCircleSharp color="gray" /></span></h3>
                                 <span className="text-gray-500 text-sm font-semibold">3M subscribers</span>
                             </div>
                             <div>
@@ -191,7 +191,7 @@ export const VideoDetails = () => {
                             />
                             <div className="flex flex-col">
                                 <h3 className="text-sm font-semibold flex items-center gap-1">
-                                    {videoInfo?.channelId?.name} <IoCheckmarkDoneCircleSharp className="text-gray-500" size={14} />
+                                    {videoInfo?.channelId?.name || "unknown User"} <IoCheckmarkDoneCircleSharp className="text-gray-500" size={14} />
                                 </h3>
                                 <span className="text-xs text-gray-500">3M subs</span>
                             </div>
@@ -226,7 +226,9 @@ export const VideoDetails = () => {
                         </button>
                     </div>
 
-
+                    <div className="bg-gray-300 rounded-md p-2 w-full">
+                        <h1>Description: {videoInfo?.description}</h1>
+                    </div>
 
                     {/* Add comments */}
                     <div className="my-6">

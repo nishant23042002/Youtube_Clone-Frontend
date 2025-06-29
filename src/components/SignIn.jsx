@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../services/authSlice.js"; // adjust path as needed
+import { loginSuccess } from "../services/authSlice.js";
 import { useNavigate } from "react-router-dom";
 
 export const SignIn = () => {
@@ -17,7 +17,7 @@ export const SignIn = () => {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        setMessage(""); // Reset
+        setMessage("");
 
         let response;
         let data;
@@ -92,7 +92,7 @@ export const SignIn = () => {
                 })
             );
 
-            setMessage(data.message); // "Login successfully"
+            setMessage(data.message);
             navigate("/videos");
 
         } catch (err) {
@@ -100,14 +100,6 @@ export const SignIn = () => {
             setMessage(`❌ ${err.message}`);
         }
     }
-
-
-
-
-
-
-
-
 
     return (
         <div className="flex justify-center items-center my-14">
@@ -123,7 +115,6 @@ export const SignIn = () => {
                 </div>
                 <div>
 
-                    {/* error message div */}
                     <div className="flex justify-center items-center">
                         <h1 className="text-red-600 font-semibold">{message}</h1>
                     </div>

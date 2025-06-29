@@ -14,6 +14,7 @@ import { ChannelInfo } from './components/ChannelInfo.jsx';
 import { Provider } from "react-redux";
 import { store } from "./services/store.js";
 import { CreateChannelForm } from './components/CreateChannel.jsx';
+import { ModalProvider } from "./context/modalContext.jsx";
 
 
 const router = createBrowserRouter([
@@ -46,7 +47,9 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
       <SliderProvider>
-        <RouterProvider router={router}></RouterProvider>
+        <ModalProvider>
+          <RouterProvider router={router}></RouterProvider>
+        </ModalProvider>
       </SliderProvider>
     </Provider>
   </StrictMode>,
