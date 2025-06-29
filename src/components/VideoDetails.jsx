@@ -36,7 +36,7 @@ export const VideoDetails = () => {
         try {
             let response = await fetch(`http://localhost:4001/api/v1/videos/${id}`)
             const data = await response.json();
-            console.log(data);
+
             setVideo(data.video);
         } catch (err) {
             console.error("Error fetching video:", err);
@@ -47,7 +47,7 @@ export const VideoDetails = () => {
             let response = await fetch(`http://localhost:4001/api/v1/comments/${id}`)
             const data = await response.json()
             setComments(data.allUserComments)
-            console.log(data);
+
         }
         catch (err) {
             console.log(err);
@@ -70,7 +70,7 @@ export const VideoDetails = () => {
             })
 
             const data = await res.json();
-            console.log(data);
+
             if (res.ok) {
                 setNewComment("");
                 setShowCommentInput(false);
@@ -232,9 +232,9 @@ export const VideoDetails = () => {
 
                     {/* Add comments */}
                     <div className="my-6">
-                        <h1 className="font-bold text-xl mb-4">{comments.length} Comments</h1>
+                        <h1 className="font-bold text-xl mb-4">{comments?.length} Comments</h1>
                         <div className="flex gap-4">
-                            <img className="w-12 h-12 rounded-full" src={user.profilePic} alt="profile" />
+                            <img className="w-12 h-12 rounded-full" src={user?.profilePic} alt="profile" />
                             <div className="w-full mr-4">
                                 <div onClick={() => setShowCommentInput(true)}>
                                     <h1 className="text-md font-semibold text-gray-600 border-b-2">Comment Section</h1>
@@ -268,7 +268,7 @@ export const VideoDetails = () => {
                                     <img className="w-12 h-12 rounded-full" src={comment?.userId?.profilePicture} alt="avatar" />
                                     <div className="flex flex-col w-full">
                                         <div className="flex justify-between">
-                                            <h1 className="text-sm font-semibold text-gray-700">@{comment.userId?.userName}</h1>
+                                            <h1 className="text-sm font-semibold text-gray-700">@{comment?.userId?.userName}</h1>
                                             {isOwner && (
                                                 <div className="flex gap-2">
                                                     <button

@@ -12,7 +12,7 @@ import { ProtectedRoute } from "./components/ProtectRoute.jsx"
 import { HandleError } from "./components/HandleError.jsx"
 import { ChannelInfo } from './components/ChannelInfo.jsx';
 import { Provider } from "react-redux";
-import { store } from "./services/store.js";
+import { store } from "../src/redux/store.js";
 import { CreateChannelForm } from './components/CreateChannel.jsx';
 import { ModalProvider } from "./context/modalContext.jsx";
 
@@ -38,7 +38,7 @@ const router = createBrowserRouter([
           </ProtectedRoute>)
       },
       { path: "createchannel", element: <CreateChannelForm /> },
-      { path: "channelinfo/:id", element: <ChannelInfo /> }
+      { path: "channelinfo/:id", element: <ChannelInfo /> },
     ]
   }
 ])

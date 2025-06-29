@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { setChannel } from "../services/authSlice.js";
+import { setChannel } from "../redux/authSlice.js";
+import { useNavigate } from "react-router-dom";
 
 
 export const CreateChannelForm = () => {
@@ -12,7 +13,7 @@ export const CreateChannelForm = () => {
     const user = useSelector((state) => state.auth.user);
     const token = useSelector((state) => state.auth.token);
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
 
     const userId = user?.id;
     if (!user) {
@@ -37,10 +38,12 @@ export const CreateChannelForm = () => {
                 },
             })
             const data = await response.json();
-            console.log(data.channel._id);
+
             setMessage(data.message);
+            
             if (response.ok) {
                 dispatch(setChannel(data.channel));
+                navigate(`/channelinfo/${data.channel._id}`)
             } else {
                 console.error("Channel creation failed:", data.message);
             }
@@ -51,48 +54,72 @@ export const CreateChannelForm = () => {
     }
 
     return (
-        <div className="max-w-md mx-auto p-4 border rounded shadow-md">
-            <h1>{message}</h1>
-            <h2 className="text-xl font-semibold mb-4 text-center">Create Your Channel</h2>
+        <div className="max-w-md mx-auto p-6 rounded-2xl shadow-lg bg-blue-100 space-y-4">
+            {message && (
+                <div className="text-center text-sm text-red-500 font-medium">{message}</div>
+            )}
+            <h2 className="text-2xl font-bold text-center text-gray-800">Create Your Channel</h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
+            <form
+                onSubmit={handleSubmit}
+                className="space-y-5"
+                encType="multipart/form-data"
+            >
                 <div>
-                    <label className="block font-medium mb-1">Channel Name</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        Channel Name <span className="text-red-500">*</span>
+                    </label>
                     <input
                         type="text"
-                        className="w-full border px-3 py-2 rounded"
+                        className="w-full bg-blue-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        placeholder="e.g. TechInformer"
                         required
                     />
                 </div>
+
                 <div>
-                    <label className="block font-medium mb-1">Description</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        Description
+                    </label>
                     <textarea
-                        className="w-full border px-3 py-2 rounded"
+                        rows={3}
+                        className="w-full bg-blue-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                    ></textarea>
+                        placeholder="Tell viewers what your channel is about"
+                    />
                 </div>
+
                 <div>
-                    <label className="block font-medium mb-1">Profile Picture URL</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        Profile Picture <span className="text-red-500">*</span>
+                    </label>
                     <input
                         type="file"
                         name="profilePicture"
                         id="profilePicture"
                         accept="image/*"
                         required
-                        className="w-full p-2 rounded-md bg-white text-gray-400 file:border-none file:mr-2 file:cursor-pointer outline-none"
+                        className="w-full text-sm text-gray-600 bg-blue-300 p-2 rounded-lg
+          file:mr-4 file:py-2 file:px-4
+          file:rounded-full file:border-0
+          file:text-sm file:font-semibold
+          file:bg-blue-50 file:text-blue-700
+          hover:file:bg-blue-100 cursor-pointer"
                         onChange={(e) => setChannelProfile(e.target.files[0])}
                     />
                 </div>
+
                 <button
                     type="submit"
-                    className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+                    className="w-full hover:bg-green-500  bg-blue-600 text-white font-semibold py-2.5 rounded-lg cursor-pointer transition duration-300"
                 >
                     Create Channel
                 </button>
             </form>
         </div>
+
     );
 };

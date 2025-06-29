@@ -13,7 +13,7 @@ import { GoMoon } from "react-icons/go";
 import { TbUserPentagon } from "react-icons/tb";
 import { PiSignOutFill } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, setChannel } from "../services/authSlice.js";
+import { logout, setChannel } from "../redux/authSlice.js";
 import { useModal } from "../context/modalContext.jsx";
 
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../services/authSlice.js";
+import { loginSuccess } from "../redux/authSlice.js";
 import { useNavigate } from "react-router-dom";
 
 export const SignIn = () => {
@@ -39,11 +39,11 @@ export const SignIn = () => {
                 console.log("REGISTER:", data);
 
                 if (!response.ok) {
-                    setMessage(data.message || "Error registering user");
+                    setMessage(data?.message || "Error registering user");
                     return;
                 }
 
-                setMessage(data.message);
+                setMessage(data?.message);
                 setPassword("")
                 setIsRegistering(false);
                 return;
@@ -67,7 +67,7 @@ export const SignIn = () => {
             console.log("LOGIN:", data);
 
             if (!response.ok) {
-                throw new Error(data.message || "Login failed");
+                throw new Error(data?.message || "Login failed");
             }
 
             // Save to localStorage

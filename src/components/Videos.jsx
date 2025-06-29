@@ -22,7 +22,6 @@ export const Videos = () => {
                     setVideos(searchResults);
                 } else {
                     const data = await fetchAllVideos();
-                    console.log(data);
                     setVideos(data.videos); 
                 }
             } catch (err) {
@@ -33,7 +32,7 @@ export const Videos = () => {
     }, [searchResults])
 
 
-    if (videos.length === 0) {
+    if (videos.length == 0) {
         return (
             <div className="flex justify-center items-center">
                 <h1 className="text-2xl font-bold">No videos</h1>
@@ -57,16 +56,16 @@ export const Videos = () => {
                         <Link key={video._id} to={`/video/${video._id}`}>
                             <div className="max-sm:w-78 w-88 min-h-80 p-1 rounded-2xl shadow-xl border border-gray-200 cursor-pointer">
                                 <div className="flex justify-center items-center min-h-48">
-                                    <img className="rounded-2xl" src={video.thumbnail} alt="thumbnail" />
+                                    <img className="rounded-2xl" src={video?.thumbnail} alt="thumbnail" />
                                 </div>
                                 <div className="flex gap-2 my-3">
                                     <div>
-                                        <img className="w-15 rounded-full" src={video.channelId?.profilePicture || "https://via.placeholder.com/40"} alt="channel-profile" />
+                                        <img className="w-15 rounded-full" src={video?.channelId?.profilePicture || "https://via.placeholder.com/40"} alt="channel-profile" />
                                     </div>
                                     <div className="w-full px-2">
-                                        <h1 className="font-semibold">{video.title}</h1>
-                                        <h3 className="text-gray-600">{video.channelId?.name || "Unknown Channel"}</h3>
-                                        <span className="text-gray-600">{formatViews(video.views)} views</span> ● <span className="text-gray-600">{formatDistanceToNow(new Date(video.uploadDate), { addSuffix: true })}</span>
+                                        <h1 className="font-semibold">{video?.title}</h1>
+                                        <h3 className="text-gray-600">{video?.channelId?.name || "Unknown Channel"}</h3>
+                                        <span className="text-gray-600">{formatViews(video?.views)} views</span> ● <span className="text-gray-600">{formatDistanceToNow(new Date(video?.uploadDate), { addSuffix: true })}</span>
                                     </div>
                                 </div>
                             </div>

@@ -3,10 +3,11 @@ import { useParams } from "react-router-dom";
 import { deleteVideo } from "../services/videoService.js";
 import { CiMenuKebab } from "react-icons/ci";
 
+
 export const ChannelInfo = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [channelInfo, setChannelInfo] = useState(null);
-    const [openMenu, setOpenMenu] = useState(true);
+    const [openMenu, setOpenMenu] = useState(false);
     const [videos, setVideos] = useState([]);
     let { id } = useParams();
 
@@ -75,7 +76,7 @@ export const ChannelInfo = () => {
 
                                         <div className="mt-2 text-sm leading-relaxed">
                                             <p className="inline text-gray-500">
-                                                {/*description*/}
+
                                                 {!isExpanded
                                                     ? channelInfo.description
                                                     : channelInfo.description}
@@ -88,9 +89,11 @@ export const ChannelInfo = () => {
                                             </span>
                                         </div>
 
-                                        <button className="mt-4 px-4 py-2 bg-black text-white font-semibold rounded-full cursor-pointer">
-                                            Subscribe
-                                        </button>
+                                        <div className="flex justify-around items-center">
+                                            <button className="mt-4 px-4 py-2 bg-black text-white font-semibold rounded-full cursor-pointer">
+                                                Subscribe
+                                            </button>                                          
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +130,7 @@ export const ChannelInfo = () => {
                                         {
                                             openMenu && (
                                                 <div className="flex justify-end gap-3 mt-3">
-                                                    <button className="bg-red-500 px-3 py-1 text-white rounded" onClick={() => handleDelete(video._id)}>
+                                                    <button className="rounded-xl px-3 py-1 text-white bg-red-600 hover:bg-green-600 cursor-pointer" onClick={() => handleDelete(video._id)}>
                                                         Delete
                                                     </button>
                                                 </div>
