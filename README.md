@@ -3,9 +3,9 @@
 A full-stack **YouTube Clone** built using **MongoDB, Express.js, React, and Node.js (MERN)**. This project allows users to watch, upload, and interact with videos—just like on YouTube. It includes authentication, channel creation, video upload, comments, search, filters, and more.
 
 
-GithHub Link - 
-Youtube-Clone-Frontend - https://github.com/nishant23042002/Youtube_Clone-Frontend
-Youtube-Clone-Backend - https://github.com/nishant23042002/Youtube_Clone-Backend
+### GithHub Link - 
+- Youtube-Clone-Frontend - https://github.com/nishant23042002/Youtube_Clone-Frontend
+- Youtube-Clone-Backend - https://github.com/nishant23042002/Youtube_Clone-Backend
 ---
 
 ## 🚀 Features
@@ -166,6 +166,8 @@ Youtube-Clone-Backend - https://github.com/nishant23042002/Youtube_Clone-Backend
 
 ### ▶️ Video Player Page
 ![Video Player](./screenshots/videoDetails.png)
+
+### ▶️ Comment Section
 ![Comment Sectiom](./screenshots/commentSection.png)
 
 ### 📺 Channel Page
