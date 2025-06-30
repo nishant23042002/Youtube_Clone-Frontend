@@ -191,7 +191,7 @@ A full-stack **YouTube Clone** built using **MongoDB, Express.js, React, and Nod
 ![Responsive](./screenshots/responsive.png)
 
 ### 🌐 DataBase Screenshot
-![MongoDB](./screenshots/responsive.png)
+![MongoDB](./screenshots/MongoDB.png)
 
 ### 📱 API Endpoint Test on POSTMAN
 ![API-Test](./screenshots/API-Test.png)
