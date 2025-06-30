@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../redux/authSlice.js";
 import { useNavigate } from "react-router-dom";
+import { loginUser, registerUser } from "../services/userService.js";
 
 export const SignIn = () => {
     const [name, setName] = useState("")
@@ -19,32 +20,11 @@ export const SignIn = () => {
         e.preventDefault();
         setMessage("");
 
-        let response;
-        let data;
-
         try {
             if (isRegistering) {
-                const formData = new FormData();
-                formData.append("userName", name);
-                formData.append("email", email);
-                formData.append("password", password);
-                formData.append("profilePicture", profilePic);
-
-                response = await fetch("http://localhost:4001/api/v1/user/register", {
-                    method: "POST",
-                    body: formData,
-                });
-
-                data = await response.json(); // ✅ move inside block
-                console.log("REGISTER:", data);
-
-                if (!response.ok) {
-                    setMessage(data?.message || "Error registering user");
-                    return;
-                }
-
-                setMessage(data?.message);
-                setPassword("")
+                const data = await registerUser({ name, email, password, profilePic })
+                setMessage(data.message);
+                setPassword("");
                 setIsRegistering(false);
                 return;
             }
@@ -55,51 +35,34 @@ export const SignIn = () => {
                 return;
             }
 
-            response = await fetch("http://localhost:4001/api/v1/user/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            });
+            const data = await loginUser({ email, password })
 
-            data = await response.json(); // ✅ safe here too
-            console.log("LOGIN:", data);
 
-            if (!response.ok) {
-                throw new Error(data?.message || "Login failed");
-            }
+            const userData = {
+                name: data.loggedInUser.name,
+                profilePic: data.loggedInUser.profilePic_URL,
+                id: data.loggedInUser.id,
+            };
 
             // Save to localStorage
             localStorage.setItem("token", data.token);
-            localStorage.setItem(
-                "user",
-                JSON.stringify({
-                    name: data.loggedInUser.name,
-                    profilePic: data.loggedInUser.profilePic_URL,
-                    id: data.loggedInUser.id,
-                })
-            );
+            localStorage.setItem("user", JSON.stringify(userData));
 
-            dispatch(
-                loginSuccess({
-                    user: {
-                        name: data.loggedInUser.name,
-                        profilePic: data.loggedInUser.profilePic_URL,
-                        id: data.loggedInUser.id,
-                    },
-                    token: data.token,
-                })
-            );
+            dispatch(loginSuccess({ user: userData, token: data.token }));
+            setMessage(data.message);
+            navigate("/videos");
 
             setMessage(data.message);
             navigate("/videos");
 
         } catch (err) {
-            console.error(err);
-            setMessage(`❌ ${err.message}`);
+            console.error("Auth Error:", err);
+            setMessage(`${err.message}`);
         }
     }
+
+
+    
 
     return (
         <div className="flex justify-center items-center my-14">

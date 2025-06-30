@@ -6,6 +6,8 @@ import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { RelatedVideos } from "./RelatedVideos";
 import { useParams } from "react-router-dom";
+import { getVideoDetailsById } from "../services/videoService.js";
+import { addCommentToVideo, deleteCommentOfVideo, editCommentOfVideo, getComments } from "../services/commentService.js";
 
 export const VideoDetails = () => {
     const { id } = useParams();
@@ -17,6 +19,7 @@ export const VideoDetails = () => {
     const [newComment, setNewComment] = useState("");
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editedText, setEditedText] = useState("");
+    const [message, setMessage] = useState("")
 
 
     const token = localStorage.getItem("token")
@@ -34,25 +37,27 @@ export const VideoDetails = () => {
 
     const getVideo = async () => {
         try {
-            let response = await fetch(`http://localhost:4001/api/v1/videos/${id}`)
-            const data = await response.json();
+            const data = await getVideoDetailsById(id)
 
             setVideo(data.video);
         } catch (err) {
             console.error("Error fetching video:", err);
         }
     };
+
+
     const getCommentsOfVideos = async () => {
         try {
-            let response = await fetch(`http://localhost:4001/api/v1/comments/${id}`)
-            const data = await response.json()
+            //here id means the videoId 
+            const data = await getComments(id)
             setComments(data.allUserComments)
-
         }
         catch (err) {
             console.log(err);
         }
     }
+
+
     useEffect(() => {
         getVideo();
         getCommentsOfVideos();
@@ -60,46 +65,24 @@ export const VideoDetails = () => {
 
     const handleAddComment = async () => {
         try {
-            let res = await fetch(`http://localhost:4001/api/v1/comments/${id}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({ text: newComment })
-            })
-
-            const data = await res.json();
-
-            if (res.ok) {
+            const response = await addCommentToVideo(id, newComment, token);
+            if (response?.comment) {
                 setNewComment("");
+                setMessage(response.message)
                 setShowCommentInput(false);
-                getCommentsOfVideos(); // refresh the comment list
-            } else {
-                alert(data.message || "Failed to add comment");
+                getCommentsOfVideos();
             }
-        } catch (error) {
-            console.log(error);
+        } catch (err) {
+            alert(err.message || "Failed to add comment");
         }
     }
 
     const handleDeleteComment = async (commentId) => {
         try {
-            const res = await fetch(`http://localhost:4001/api/v1/comments/${commentId}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const res = await deleteCommentOfVideo(commentId, token)
+            setComments((prev) => prev.filter((c) => c._id !== commentId));
+            setMessage(res.message)
 
-            const data = await res.json();
-
-            if (res.ok) {
-                // Remove the deleted comment from state
-                setComments((prev) => prev.filter((c) => c._id !== commentId));
-            } else {
-                alert(data.message || "Failed to delete comment");
-            }
         } catch (err) {
             console.error("Delete comment error:", err);
             alert("Something went wrong");
@@ -110,28 +93,17 @@ export const VideoDetails = () => {
         if (!editedText.trim()) return;
 
         try {
-            const res = await fetch(`http://localhost:4001/api/v1/comments/${commentId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({ text: editedText })
-            });
-
-            const data = await res.json();
-            if (res.ok) {
-                setComments((prev) =>
-                    prev.map((c) => (c._id === commentId ? { ...c, text: editedText } : c))
-                );
-                setEditingCommentId(null);
-                setEditedText("");
-            } else {
-                alert(data.message || "Failed to update comment");
-            }
+            const response = await editCommentOfVideo(commentId, editedText, token);
+            setComments((prev) =>
+                prev.map((c) =>
+                    c._id === commentId ? { ...c, text: editedText } : c
+                )
+            );
+            setEditingCommentId(null);
+            setMessage(response.message)
+            setEditedText("");
         } catch (err) {
-            console.error("Edit error:", err);
-            alert("Something went wrong");
+            alert(err.message || "Failed to update comment");
         }
     };
 
@@ -232,7 +204,10 @@ export const VideoDetails = () => {
 
                     {/* Add comments */}
                     <div className="my-6">
-                        <h1 className="font-bold text-xl mb-4">{comments?.length} Comments</h1>
+                        <div className="flex justify-center flex-col items-center">
+                            <h1 className="font-bold text-xl mb-4">{comments?.length} Comments</h1>
+                            <span className={`${message === "Comment deleted successfully" ? "text-red-600" : "text-green-600"}`}>{message}</span>
+                        </div>
                         <div className="flex gap-4">
                             <img className="w-12 h-12 rounded-full" src={user?.profilePic} alt="profile" />
                             <div className="w-full mr-4">
@@ -249,8 +224,8 @@ export const VideoDetails = () => {
                                             onChange={(e) => setNewComment(e.target.value)}
                                         />
                                         <div className="flex justify-end gap-4 mt-2">
-                                            <button onClick={() => setShowCommentInput(false)} className="p-2 px-4 rounded-3xl hover:bg-gray-200">Cancel</button>
-                                            <button onClick={handleAddComment} className="p-2 px-4 bg-gray-200 hover:bg-gray-300 rounded-3xl">Add Comment</button>
+                                            <button onClick={() => setShowCommentInput(false)} className="p-2 px-4 rounded-3xl font-semibold hover:bg-gray-200 cursor-pointer">Cancel</button>
+                                            <button onClick={handleAddComment} className="p-2 px-4 bg-gray-200 hover:text-white font-semibold hover:bg-gray-600 rounded-3xl cursor-pointer">Add Comment</button>
                                         </div>
                                     </div>
                                 )}
@@ -276,13 +251,13 @@ export const VideoDetails = () => {
                                                             setEditingCommentId(comment._id);
                                                             setEditedText(comment.text);
                                                         }}
-                                                        className="text-blue-500 text-sm hover:underline"
+                                                        className="text-sm hover:underline py-2 px-5 font-semibold bg-yellow-400 rounded-2xl cursor-pointer text-white"
                                                     >
                                                         Edit
                                                     </button>
                                                     <button
                                                         onClick={() => handleDeleteComment(comment._id)}
-                                                        className="text-red-500 text-sm hover:underline"
+                                                        className="text-sm hover:underline py-1.5 px-3 bg-red-500 font-semibold cursor-pointer text-white rounded-2xl"
                                                     >
                                                         Delete
                                                     </button>
@@ -300,13 +275,13 @@ export const VideoDetails = () => {
                                                 <div className="flex justify-end gap-2 mt-1">
                                                     <button
                                                         onClick={() => setEditingCommentId(null)}
-                                                        className="text-sm hover:underline"
+                                                        className="text-sm hover:underline py-1.5 px-3 bg-red-500 font-semibold cursor-pointer text-white rounded-2xl"
                                                     >
                                                         Cancel
                                                     </button>
                                                     <button
                                                         onClick={() => handleEditComment(comment._id)}
-                                                        className="text-sm text-green-600 font-semibold"
+                                                        className="text-sm rounded-2xl cursor-pointer font-semibold py-1.5 font-semibold px-3 bg-green-500 text-white"
                                                     >
                                                         Save
                                                     </button>

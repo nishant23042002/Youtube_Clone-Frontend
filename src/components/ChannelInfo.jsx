@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { deleteVideo } from "../services/videoService.js";
 import { CiMenuKebab } from "react-icons/ci";
 import { UploadVideo } from "./UploadVideo.jsx";
+import { getChannelById, getChannelVideos } from "../services/channelService.js";
 
 
 export const ChannelInfo = () => {
@@ -17,18 +18,16 @@ export const ChannelInfo = () => {
     useEffect(() => {
         const fetchChannelAndVideos = async () => {
             try {
-                const res1 = await fetch(`http://localhost:4001/api/v1/channels/${id}`);
-                const data1 = await res1.json();
-                setChannelInfo(data1.channelById);
+                const channel = await getChannelById(id)
+                setChannelInfo(channel);
 
-                const res2 = await fetch(`http://localhost:4001/api/v1/channels/${id}/videos`);
-                const data2 = await res2.json();
-                setVideos(data2.videos);
+                const videosList = await getChannelVideos(id)
+                setVideos(videosList);
+
             } catch (err) {
                 console.error("Error:", err.message);
             }
         };
-
         fetchChannelAndVideos();
     }, [id]);
 
@@ -52,8 +51,8 @@ export const ChannelInfo = () => {
                         <div className="w-full max-w-4xl rounded-xl overflow-hidden">
                             <div className="w-full">
                                 <img
-                                    className="w-full object-cover h-34 rounded-xl"
-                                    src="https://q5n8c8q9.delivery.rocketcdn.me/wp-content/uploads/2019/07/YouTube-Banner-Size-and-Dimensions-Guide.png"
+                                    className="w-full object-contain h-34 rounded-xl"
+                                    src={channelInfo?.profilePicture}
                                     alt="cover-pic"
                                 />
                             </div>
@@ -69,20 +68,20 @@ export const ChannelInfo = () => {
                                     </div>
 
                                     <div className="flex-grow">
-                                        <h3 className="font-bold text-xl sm:text-2xl">{channelInfo.name}</h3>
+                                        <h3 className="font-bold text-xl sm:text-2xl">{channelInfo?.name}</h3>
 
                                         <div className="flex flex-wrap gap-2 text-sm text-gray-600 mt-1">
                                             <span className="font-semibold text-black">@{channelInfo.name}</span>
                                             <span>• 16.7 lakh subscribers</span>
-                                            <span>• Total Videos: {videos.length}</span>
+                                            <span>• Total Videos: {videos?.length}</span>
                                         </div>
 
                                         <div className="mt-2 text-sm leading-relaxed">
                                             <p className="inline text-gray-500">
 
                                                 {!isExpanded
-                                                    ? channelInfo.description
-                                                    : channelInfo.description}
+                                                    ? channelInfo?.description
+                                                    : channelInfo?.description}
                                             </p>
                                             <span
                                                 className="ml-1 text-blue-600 cursor-pointer"

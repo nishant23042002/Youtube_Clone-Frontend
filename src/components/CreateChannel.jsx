@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setChannel } from "../redux/authSlice.js";
 import { useNavigate } from "react-router-dom";
+import { createChannel } from "../services/channelService.js";
 
 
 export const CreateChannelForm = () => {
@@ -29,27 +30,18 @@ export const CreateChannelForm = () => {
             formData.append("profilePicture", channelProfile);
             formData.append("owner", userId);
 
-
-            let response = await fetch("http://localhost:4001/api/v1/channels/", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            const data = await response.json();
+            const data = await createChannel(formData, token);
 
             setMessage(data.message);
-            
-            if (response.ok) {
+
+            if (data.channel) {
                 dispatch(setChannel(data.channel));
-                navigate(`/channelinfo/${data.channel._id}`)
-            } else {
-                console.error("Channel creation failed:", data.message);
+                navigate(`/channelinfo/${data.channel._id}`);
             }
         }
         catch (err) {
-            console.log(err.message);
+            console.error("Error creating channel:", err.response?.data?.message || err.message);
+            setMessage(err.response?.data?.message || "Something went wrong");
         }
     }
 
@@ -102,12 +94,7 @@ export const CreateChannelForm = () => {
                         id="profilePicture"
                         accept="image/*"
                         required
-                        className="w-full text-sm text-gray-600 bg-blue-300 p-2 rounded-lg
-          file:mr-4 file:py-2 file:px-4
-          file:rounded-full file:border-0
-          file:text-sm file:font-semibold
-          file:bg-blue-50 file:text-blue-700
-          hover:file:bg-blue-100 cursor-pointer"
+                        className="w-full text-sm text-gray-600 bg-blue-300 p-2 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
                         onChange={(e) => setChannelProfile(e.target.files[0])}
                     />
                 </div>

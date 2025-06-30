@@ -1,6 +1,6 @@
 # 🎥 YouTube Clone – MERN Stack Capstone Project
 
-A full-stack **YouTube Clone** built using **MongoDB, Express.js, React, and Node.js (MERN)**. This project allows users to watch, upload, and interact with videos—just like on YouTube. It includes authentication, channel creation, video upload, comments, search, filters, and more.
+A full-stack **YouTube Clone** built using **MongoDB, Express.js, React, and Node.js (MERN)**. This project allows users to watch, upload, and interact with videos—just like on YouTube. It includes authentication, channel creation, video upload, comments, search, and more.
 
 
 ### GithHub Link - 
@@ -13,15 +13,15 @@ A full-stack **YouTube Clone** built using **MongoDB, Express.js, React, and Nod
 ### 🔸 Frontend (React + Redux Toolkit)
 - ✅ YouTube-style homepage with:
   - Header, toggleable sidebar, filter buttons
-  - Video cards showing thumbnail, title, channel, and views
+  - Video cards showing thumbnail, title, channel, and views[static]
 - ✅ Authentication system with:
   - User registration and login using JWT
   - Conditional UI (e.g., Sign In button vs Username/Avatar)
 - ✅ Video Player page:
-  - Watch video and comment
+  - Watch video and comment [videos are just randomly taken so please ignore]
 - ✅ Channel page:
   - Create your own channel
-  - Upload, edit, and delete videos
+  - Upload and delete videos
 - ✅ Search filter on homepage
 - ✅ Fully responsive layout for mobile, tablet, and desktop
 
@@ -31,7 +31,7 @@ A full-stack **YouTube Clone** built using **MongoDB, Express.js, React, and Nod
   - Video CRUD
   - Channel creation & fetch
   - Comment CRUD
-- ✅ Multer for handling file uploads (video + thumbnail)
+- ✅ Multer for handling file uploads (thumbnail, profilepicture)
 - ✅ JWT authentication for protected routes
 - ✅ Mongoose schemas for database modeling
 
@@ -71,7 +71,7 @@ A full-stack **YouTube Clone** built using **MongoDB, Express.js, React, and Nod
     ```
 
 3. **Set up environment variables:**
-    Create a `.env` file:
+    Create a `.env` file in root of backend folder:
     ```.env
     MONGO_URI=mongodb+srv://nishantsapkal2304:tEQEKm9mHKvuoTTn@cluster0.opnffpy.mongodb.net/Youtube-Clone-Backend-API
     PORT=4001
@@ -148,11 +148,17 @@ A full-stack **YouTube Clone** built using **MongoDB, Express.js, React, and Nod
 
  - Comment
 
- - Edit/Delete own videos/comments
+ - Delete own videos/comments
 
  - Search videos on homepage
 
  - Fully responsive layout
+
+
+### Dummy User email and password to login
+ - `email` - pixelraiders@gmail.com  || nomadiclens@gmail.com || voicebox@gmail.com 
+ - `password` - 0000
+
 
 ---
 
@@ -174,8 +180,8 @@ A full-stack **YouTube Clone** built using **MongoDB, Express.js, React, and Nod
 ![Create Channel](./screenshots/createChannel.png)
 ![Channel Page](./screenshots/channelPage.png)
 
-### ✏️ Upload/Edit Video
-![Upload/Edit](./screenshots/)
+### ✏️ Upload Video
+![Upload](./screenshots/upload%20video.png)
 
 ### 🔐 Login/Register Page
 ![Authentication](./screenshots/register.png)
@@ -184,7 +190,17 @@ A full-stack **YouTube Clone** built using **MongoDB, Express.js, React, and Nod
 ### 📱 Responsive Layout
 ![Responsive](./screenshots/responsive.png)
 
+### 🌐 DataBase Screenshot
+![MongoDB](./screenshots/responsive.png)
+
+### 📱 API Endpoint Test on POSTMAN
+![API-Test](./screenshots/API-Test.png)
+
 ---
 
 🙋 Author - Nishant Sapkal
 GitHub: (https://github.com/nishant23042002)
+
+
+---
+

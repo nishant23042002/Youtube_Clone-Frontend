@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { uploadVideoOnChannel } from "../services/videoService.js";
 
 export const UploadVideo = ({ onSuccess, channelId }) => {
     const [title, setTitle] = useState("");
@@ -25,16 +25,10 @@ export const UploadVideo = ({ onSuccess, channelId }) => {
 
         try {
             const token = localStorage.getItem("token");
-            const res = await axios.post("http://localhost:4001/api/v1/videos", formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
-                }
-            });
-
-            onSuccess(res.data.video);
+            const data = await uploadVideoOnChannel(formData, token);
+            onSuccess(data.video);
         } catch (error) {
-            console.error("❌ Upload failed:", error.response?.data || error.message);
+            console.error("Upload failed:", error.response?.data || error.message);
         }
     };
 

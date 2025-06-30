@@ -22,7 +22,7 @@ export const Videos = () => {
                     setVideos(searchResults);
                 } else {
                     const data = await fetchAllVideos();
-                    setVideos(data.videos); 
+                    setVideos(data.videos);
                 }
             } catch (err) {
                 console.error("Error loading videos:", err);
@@ -55,7 +55,7 @@ export const Videos = () => {
                     return (
                         <Link key={video._id} to={`/video/${video._id}`}>
                             <div className="max-sm:w-78 w-88 min-h-80 p-1 rounded-2xl shadow-xl border border-gray-200 cursor-pointer">
-                                <div className="flex justify-center items-center min-h-48">
+                                <div className="flex justify-center items-center">
                                     <img className="rounded-2xl" src={video?.thumbnail} alt="thumbnail" />
                                 </div>
                                 <div className="flex gap-2 my-3">

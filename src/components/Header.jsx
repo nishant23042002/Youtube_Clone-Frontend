@@ -15,6 +15,8 @@ import { PiSignOutFill } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setChannel } from "../redux/authSlice.js";
 import { useModal } from "../context/modalContext.jsx";
+import { fetchAllVideos } from "../services/videoService.js";
+import { getUserChannel } from "../services/channelService.js";
 
 
 
@@ -34,8 +36,6 @@ export const Header = () => {
 
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
     localStorage.clear()
     dispatch(logout());
     window.location.href = "/";
@@ -48,14 +48,13 @@ export const Header = () => {
   const handleSearch = async () => {
     if (!searchText.trim()) return;
     try {
-      const res = await fetch("http://localhost:4001/api/v1/videos")
-      const data = await res.json();
-      const allVideos = data.videos;
+      const data = await fetchAllVideos()
 
+      const allVideos = data.videos;
       const filtered = allVideos.filter(video =>
         video.title.toLowerCase().includes(searchText.toLowerCase())
       );
- 
+
       navigate("/videos", { state: { searchResults: filtered } });
 
     } catch (err) {
@@ -67,11 +66,8 @@ export const Header = () => {
     const fetchUserChannel = async () => {
       if (user?.id && token) {
         try {
-          const res = await fetch(`http://localhost:4001/api/v1/channels/user/${user.id}`);
-          if (res.ok) {
-            const data = await res.json();
-            dispatch(setChannel(data.channel));
-          }
+          const channel = await getUserChannel(user?.id);
+          if (channel) dispatch(setChannel(channel));
         } catch (err) {
           console.error("Failed to fetch user channel:", err.message);
         }
@@ -79,6 +75,10 @@ export const Header = () => {
     };
     fetchUserChannel();
   }, [user?.id, token, dispatch]);
+
+
+
+
 
   return (
     <>
@@ -99,7 +99,6 @@ export const Header = () => {
 
         {/* Center Section */}
         <div className="w-full flex justify-center items-center">
-          {/* Desktop Search */}
           <div className="hidden sm:flex w-full justify-center items-center">
             <input
               value={searchText}
@@ -117,7 +116,6 @@ export const Header = () => {
           </div>
         </div>
 
-        {/* Right Section */}
         <div className="max-sm:mx-0 flex items-center gap-4 mx-6">
           <div className="flex gap-2">
 

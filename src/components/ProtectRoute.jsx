@@ -4,7 +4,6 @@ export const ProtectedRoute = ({ children }) => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-        //Redirect to login if token not found
         return <Navigate to="/signin" replace />;
     }
     return children;
