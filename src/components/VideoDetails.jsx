@@ -281,7 +281,7 @@ export const VideoDetails = () => {
                                                     </button>
                                                     <button
                                                         onClick={() => handleEditComment(comment._id)}
-                                                        className="text-sm rounded-2xl cursor-pointer font-semibold py-1.5 font-semibold px-3 bg-green-500 text-white"
+                                                        className="text-sm rounded-2xl cursor-pointer py-1.5 font-semibold px-3 bg-green-500 text-white"
                                                     >
                                                         Save
                                                     </button>
