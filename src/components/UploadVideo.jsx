@@ -46,7 +46,7 @@ export const UploadVideo = ({ onSuccess, channelId }) => {
             <input className="w-full bg-blue-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" placeholder="Duration" value={thumbnailduration} onChange={(e) => setThumbnailDuration(e.target.value)} required />
             <input className="w-full bg-blue-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Video Url" type="text" onChange={(e) => setVideoFileUrl(e.target.value)} required />
             <div className="p-2">
-                <label htmlFor="img">Channel Profile</label>
+                <label htmlFor="img">Video Thumbnail</label>
                 <input className="w-full text-sm text-gray-600 bg-blue-300 p-2 rounded-lg
           file:mr-4 file:py-2 file:px-4
           file:rounded-full file:border-0
